@@ -205,7 +205,7 @@ Rate-limit the public POST routes by IP and wedding.
 
 Test: we know which of button, QR and copy-ID work, and section 7 is updated to match.
 
-- [ ] P0-01 Create the GitHub repo with the layout in section 4
+- [x] P0-01 Create the GitHub repo with the layout in section 4
 - [ ] P0-02 Create the Supabase project (India region if available) and save keys in `.env.local`, never in git
 - [ ] P0-03 Build one static page with a UPI button, a QR and a copy-ID button pointing at your own UPI ID for ₹1
 - [ ] P0-04 Test on Google Pay, PhonePe and Paytm, on Android and iPhone, opened from a WhatsApp message; record results in `docs/upi-test.md`

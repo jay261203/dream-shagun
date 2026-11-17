@@ -11,5 +11,5 @@ One line per decision, newest last.
 | 17 Nov 2026 | Invitations are HTML templates with placeholders and slots | New looks without changing product code |
 | 17 Nov 2026 | Sprint 0 started early: 17 to 22 Nov; Sprint 1 moved to 23 to 29 Nov | Started a week ahead of plan |
 | | Pay screen layout: (fill in after DS-6) | |
-| | Supabase free-tier limits: (fill in after DS-4) | |
+| 18 Nov 2026 | Supabase free tier: 500 MB database, 1 GB file storage, 5 GB egress, 50,000 monthly users, paused after 1 week idle, 2 active projects | Photo album (phase 2) will outgrow 1 GB; revisit before P2-07 |
 | 17 Nov 2026 | Employment contract check: side project is legal and allowed by the company | Confirmed by Jay; no written approval needed |

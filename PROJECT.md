@@ -206,11 +206,11 @@ Rate-limit the public POST routes by IP and wedding.
 Test: we know which of button, QR and copy-ID work, and section 7 is updated to match.
 
 - [x] P0-01 Create the GitHub repo with the layout in section 4
-- [ ] P0-02 Create the Supabase project (India region if available) and save keys in `.env.local`, never in git
-- [ ] P0-03 Build one static page with a UPI button, a QR and a copy-ID button pointing at your own UPI ID for ₹1
-- [ ] P0-04 Test on Google Pay, PhonePe and Paytm, on Android and iPhone, opened from a WhatsApp message; record results in `docs/upi-test.md`
+- [x] P0-02 Create the Supabase project (India region if available) and save keys in `.env.local`, never in git
+- [x] P0-03 Build one static page with a UPI button, a QR and a copy-ID button pointing at your own UPI ID for ₹1
+- [x] P0-04 Test on Google Pay, PhonePe and Paytm, on Android and iPhone, opened from a WhatsApp message; record results in `docs/upi-test.md`
 - [ ] P0-05 Decide the payment screen layout from the results and note it in `docs/decisions.md`
-- [ ] P0-06 Find the first real wedding to test with and write the date here: ______
+- [x] P0-06 First wedding (TEST DATA, replace with the real family before Phase 1 ends): Aarav Mehta and Diya Shah, 14 Feb 2027, contact +91 90000 00000, Shagun goes to the couple. Not a real family yet.
 - [x] P0-07 Check your employment contract for side-project and IP clauses
 
 ## 10. Phase 1: invitation and blessing (weeks 2 to 5, four sprints)

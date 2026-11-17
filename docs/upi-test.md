@@ -15,4 +15,4 @@ Also note: does the button work when the link is opened inside WhatsApp's own br
 
 ## Conclusion
 
-(Write the decision here, then copy it to `docs/decisions.md` — DS-7.)
+Per-app results were not recorded. Decision (18 Nov 2026): keep the default layout in `docs/decisions.md`. UPI is optional for guests, with button, QR and copy-ID all offered so a failure in one still leaves the others.

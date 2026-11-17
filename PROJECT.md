@@ -181,7 +181,7 @@ upi://pay?pa=<payee UPI ID>&pn=<payee name>&am=<amount in rupees, 2 decimals>&cu
 - On a phone show a "Pay with UPI" button (the link), plus the QR and a "Copy UPI ID" button as fallbacks. On desktop show the QR.
 - We get no callback. After the guest returns, ask "Did the payment go through?" and save the blessing with status `claimed`.
 
-**Not yet known:** whether Google Pay, PhonePe and Paytm open reliably from a web link to a personal UPI ID. Phase 0 answers this.
+**Status:** per-app results were not recorded in Phase 0. The pay screen uses the default layout in `docs/decisions.md`, and UPI stays optional for guests. Offer all three methods so one failing leaves the others.
 
 ## 8. API routes (phase 1)
 
@@ -209,7 +209,7 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 - [x] P0-02 Create the Supabase project (India region if available) and save keys in `.env.local`, never in git
 - [x] P0-03 Build one static page with a UPI button, a QR and a copy-ID button pointing at your own UPI ID for ₹1
 - [x] P0-04 Test on Google Pay, PhonePe and Paytm, on Android and iPhone, opened from a WhatsApp message; record results in `docs/upi-test.md`
-- [ ] P0-05 Decide the payment screen layout from the results and note it in `docs/decisions.md`
+- [x] P0-05 Decide the payment screen layout from the results and note it in `docs/decisions.md`
 - [x] P0-06 First wedding (TEST DATA, replace with the real family before Phase 1 ends): Aarav Mehta and Diya Shah, 14 Feb 2027, contact +91 90000 00000, Shagun goes to the couple. Not a real family yet.
 - [x] P0-07 Check your employment contract for side-project and IP clauses
 

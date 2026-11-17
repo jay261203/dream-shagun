@@ -12,4 +12,4 @@ One line per decision, newest last.
 | 17 Nov 2026 | Sprint 0 started early: 17 to 22 Nov; Sprint 1 moved to 23 to 29 Nov | Started a week ahead of plan |
 | | Pay screen layout: (fill in after DS-6) | |
 | | Supabase free-tier limits: (fill in after DS-4) | |
-| | Employment contract check: (fill in after DS-9) | |
+| 17 Nov 2026 | Employment contract check: side project is legal and allowed by the company | Confirmed by Jay; no written approval needed |

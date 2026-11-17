@@ -211,7 +211,7 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 - [ ] P0-04 Test on Google Pay, PhonePe and Paytm, on Android and iPhone, opened from a WhatsApp message; record results in `docs/upi-test.md`
 - [ ] P0-05 Decide the payment screen layout from the results and note it in `docs/decisions.md`
 - [ ] P0-06 Find the first real wedding to test with and write the date here: ______
-- [ ] P0-07 Check your employment contract for side-project and IP clauses
+- [x] P0-07 Check your employment contract for side-project and IP clauses
 
 ## 10. Phase 1: invitation and blessing (weeks 2 to 5, four sprints)
 

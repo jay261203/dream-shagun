@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPI test – Dream Shagun</title>
+<meta property="og:title" content="UPI test – Dream Shagun">
+<meta property="og:description" content="Sprint 0 test page: does a UPI link open Google Pay, PhonePe and Paytm?">
+<script src="/qrcode.js"></script><!-- qrcode-generator 1.4.4, MIT licence, Kazuhiko Arase -->
+<style>
+  :root { --ink:#1f1a17; --muted:#6b625c; --accent:#b0342b; --bg:#fbf7f2; --line:#e6ddd3; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width: 440px; margin: 0 auto; padding: 24px 18px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+  fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin: 0 0 18px; background:#fff; }
+  legend { font-weight: 600; font-size: 14px; padding: 0 6px; }
+  label { display:block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  input { width:100%; font-size:16px; padding:10px 12px; border:1px solid var(--line); border-radius:8px; }
+  .btn { display:block; width:100%; text-align:center; font-size:17px; font-weight:600; padding:14px; border-radius:10px; border:0; margin: 10px 0; text-decoration:none; cursor:pointer; }
+  .primary { background: var(--accent); color:#fff; }
+  .secondary { background:#fff; color: var(--ink); border:1px solid var(--line); }
+  #qr { display:flex; justify-content:center; padding: 12px; background:#fff; border-radius:12px; border:1px solid var(--line); }
+  #qr img { width: 220px; height: 220px; image-rendering: pixelated; }
+  code { font-size: 12px; word-break: break-all; color: var(--muted); }
+  .result { display:flex; gap:8px; flex-wrap:wrap; }
+  .result button { flex:1; min-width: 30%; }
+  #log { font-size: 13px; white-space: pre-wrap; background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; min-height: 40px; }
+  small { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>UPI test page</h1>
+  <p class="lead">Sprint 0, task DS-5 / DS-6. Pays a small amount to your own UPI ID to see which methods work from a web page.</p>
+
+  <fieldset>
+    <legend>1. Payee</legend>
+    <label for="pa">Your UPI ID</label>
+    <input id="pa" placeholder="name@okbank" autocomplete="off" autocapitalize="none">
+    <label for="pn">Name shown to payer</label>
+    <input id="pn" placeholder="Your name" autocomplete="off">
+    <label for="am">Amount (₹)</label>
+    <input id="am" type="number" min="1" step="1" value="1" inputmode="numeric">
+    <label for="tn">Note</label>
+    <input id="tn" value="Test blessing" maxlength="50">
+    <button class="btn secondary" id="save" type="button">Update link and QR</button>
+    <small>Tip: share this page as <code>?pa=you@bank&pn=Your%20Name</code> so the fields are pre-filled.</small>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. Pay with the button (phone)</legend>
+    <a class="btn primary" id="pay" href="#">Pay with UPI</a>
+    <code id="link"></code>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. Scan the QR (from another phone or a computer)</legend>
+    <div id="qr"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. Copy the UPI ID</legend>
+    <button class="btn secondary" id="copy" type="button">Copy UPI ID</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>5. Record what happened</legend>
+    <label for="who">App and phone (e.g. "PhonePe, Android")</label>
+    <input id="who" placeholder="App, phone">
+    <div class="result">
+      <button class="btn secondary" type="button" data-r="worked">Paid OK</button>
+      <button class="btn secondary" type="button" data-r="opened-no-amount">Opened, no amount</button>
+      <button class="btn secondary" type="button" data-r="blocked">Blocked / error</button>
+      <button class="btn secondary" type="button" data-r="did-not-open">Didn't open</button>
+    </div>
+    <label>Results so far (copy these into docs/upi-test.md)</label>
+    <div id="log"></div>
+    <button class="btn secondary" id="copylog" type="button">Copy results</button>
+  </fieldset>
+</main>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  ["pa", "pn", "am", "tn"].forEach((k) => { if (params.get(k)) $(k).value = params.get(k); });
+
+  const results = [];
+  try { results.push(...JSON.parse(localStorage.getItem("upiTestResults") || "[]")); } catch (e) {}
+
+  function upiLink() {
+    const pa = $("pa").value.trim();
+    const pn = $("pn").value.trim();
+    const am = Math.max(1, parseInt($("am").value, 10) || 1).toFixed(2);
+    const tn = $("tn").value.trim();
+    const q = [
+      "pa=" + encodeURIComponent(pa).replace(/%40/g, "@"),
+      "pn=" + encodeURIComponent(pn),
+      "am=" + am,
+      "cu=INR",
+      "tn=" + encodeURIComponent(tn),
+    ].join("&");
+    return "upi://pay?" + q;
+  }
+
+  function render() {
+    const valid = /^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/.test($("pa").value.trim());
+    const link = upiLink();
+    $("pay").href = valid ? link : "#";
+    $("pay").style.opacity = valid ? 1 : 0.5;
+    $("link").textContent = valid ? link : "Enter a valid UPI ID first (like name@okbank).";
+    $("qr").innerHTML = "";
+    if (valid && window.qrcode) {
+      const qr = qrcode(0, "M");
+      qr.addData(link);
+      qr.make();
+      $("qr").innerHTML = qr.createImgTag(6, 8);
+    } else if (!window.qrcode) {
+      $("qr").textContent = "QR library did not load (check connection).";
+    }
+  }
+
+  function renderLog() {
+    $("log").textContent = results.length
+      ? results.map((r) => `${r.time}  ${r.who || "(app not given)"}  ${r.method}  ${r.result}`).join("\n")
+      : "No results yet.";
+  }
+
+  let lastMethod = "button";
+  $("pay").addEventListener("click", (e) => { if ($("pay").href.endsWith("#")) e.preventDefault(); lastMethod = "button"; });
+  $("qr").addEventListener("click", () => { lastMethod = "qr"; });
+  $("copy").addEventListener("click", async () => {
+    lastMethod = "copy-id";
+    try { await navigator.clipboard.writeText($("pa").value.trim()); $("copy").textContent = "Copied"; }
+    catch (e) { $("copy").textContent = "Copy failed – select it manually"; }
+    setTimeout(() => ($("copy").textContent = "Copy UPI ID"), 1500);
+  });
+  $("save").addEventListener("click", render);
+  ["pa", "pn", "am", "tn"].forEach((k) => $(k).addEventListener("change", render));
+
+  document.querySelectorAll("[data-r]").forEach((b) =>
+    b.addEventListener("click", () => {
+      results.push({
+        time: new Date().toLocaleString("en-IN"),
+        who: $("who").value.trim(),
+        method: lastMethod,
+        result: b.dataset.r,
+        ua: navigator.userAgent,
+      });
+      try { localStorage.setItem("upiTestResults", JSON.stringify(results)); } catch (e) {}
+      renderLog();
+    })
+  );
+  $("copylog").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("log").textContent); $("copylog").textContent = "Copied"; }
+    catch (e) { $("copylog").textContent = "Copy failed"; }
+    setTimeout(() => ($("copylog").textContent = "Copy results"), 1500);
+  });
+
+  render();
+  renderLog();
+})();
+</script>
+</body>
+</html>

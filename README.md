@@ -26,6 +26,20 @@ uvicorn app.main:app --reload      # http://localhost:8000/health
 pytest
 ```
 
+## Run with Docker
+
+Needs Docker Desktop. Supabase runs through its CLI; web and api run in compose.
+
+```bash
+npx supabase start               # database, auth, storage
+docker compose up --build        # web on :3000 and api on :8000 (hot reload)
+docker compose up web            # or just one service
+docker compose run --rm --no-deps api pytest
+npx supabase test db             # row-level security tests
+```
+
+See [docs/architecture.md](docs/architecture.md) for how it all fits together.
+
 ## Environment
 
 Copy `.env.example` to `web/.env.local` and `api/.env` and fill in the Supabase values. Never commit real keys.

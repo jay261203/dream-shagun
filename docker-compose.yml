@@ -1,0 +1,57 @@
+# Local development: web + api in Docker, with hot reload.
+#
+# Supabase is NOT in this file. Run it with the Supabase CLI (it manages its own containers):
+#   npx supabase start
+# Containers reach it through host.docker.internal.
+#
+# Run both:        docker compose up --build
+# Run one service: docker compose up web      (or: docker compose up api)
+#
+# Secrets come from web/.env.local and api/.env (never committed). Copy them from .env.example.
+
+services:
+  api:
+    build:
+      context: ./api
+      target: dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: ./api/.env
+        required: false
+    environment:
+      # Inside a container, localhost is the container itself, so point at the host's Supabase.
+      SUPABASE_URL: http://host.docker.internal:54321
+    volumes:
+      - ./api/app:/app/app
+      - ./api/tests:/app/tests
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: ./web
+      target: dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: ./web/.env.local
+        required: false
+    environment:
+      # Browser calls use localhost; server-side calls from this container use the service name.
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      API_URL_INTERNAL: http://api:8000
+      WATCHPACK_POLLING: "true"
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - ./web:/app
+      # Keep the container's own node_modules and build cache, not the Windows ones.
+      - /app/node_modules
+      - /app/.next

@@ -41,7 +41,8 @@ Three ideas shape everything:
 | File storage | Supabase Storage | Photos and covers; limit is 1 GB on the free tier, so revisit before the album (P2-07) | planned |
 | Templates | Plain HTML and CSS rendered with Handlebars | New invitation looks without touching product code; Handlebars escapes values so names cannot inject HTML | planned (DS-13) |
 | Payment | `upi://pay` deep link plus a QR code, no gateway | No payment licence, no money held, nothing to reconcile with a bank | link builder built |
-| Hosting | Vercel (web), Render or Railway (API) | Cheap, deploy from git | planned (P1-14) |
+| Containers | Docker, one image per service, docker-compose for local | Same runtime locally and in production for the API; any service can run alone | built and tested |
+| Hosting | Vercel (web), Render or Railway (API, from the `prod` image) | Cheap, deploy from git | planned (P1-14) |
 | Analytics | PostHog | Optional, after Phase 1 | planned |
 
 ### Why two servers (Next.js and FastAPI)
@@ -53,8 +54,9 @@ Next.js renders pages. FastAPI owns every write and every rule that touches mone
 ```
 dream-shagun/
 ├── PROJECT.md          plan, rules, task list
-├── web/                Next.js app
-├── api/                FastAPI app (routers, models, services, tests)
+├── docker-compose.yml  local web + api with hot reload
+├── web/                Next.js app + Dockerfile
+├── api/                FastAPI app (routers, models, services, tests) + Dockerfile
 ├── templates/          one folder per invitation design
 ├── supabase/
 │   ├── migrations/     numbered SQL files
@@ -163,13 +165,99 @@ templates/<id>/
 - Photos are the family's: shown only through the wedding link, and guest uploads appear after a family member approves.
 - Templates may not call outside servers, which limits what a third-party design can do.
 
-## 9. Local development
+## 9. Docker and environments
+
+### Environments
+
+| | Local | Production |
+| --- | --- | --- |
+| Web | `web` container (dev target, hot reload) or `npm run dev` | Vercel |
+| API | `api` container (dev target, auto reload) or `uvicorn` | Render or Railway, running the `prod` image |
+| Database, auth, storage | Supabase CLI stack (`npx supabase start`, its own containers) | Supabase hosted project |
+| Secrets | `web/.env.local`, `api/.env` | Provider dashboards |
+
+Supabase is deliberately not in `docker-compose.yml`. The Supabase CLI already manages roughly a dozen containers for it, and duplicating that would drift from what the hosted service does.
+
+### The two images
+
+Each service has one Dockerfile with a `dev` and a `prod` target.
+
+| Image | Base | Prod size | Notes |
+| --- | --- | --- | --- |
+| `api` | python:3.12-slim | about 175 MB | Runs as a non-root user, has a `/health` check |
+| `web` | node:22-alpine | about 235 MB | Next.js `output: "standalone"`, switched on only by `DOCKER_BUILD=1` so Vercel builds are unaffected |
+
+`NEXT_PUBLIC_*` values are baked into the web image at build time, so a production web image needs them as build arguments.
+
+### How containers find each other
+
+```
+browser ---> localhost:3000 (web) ---> localhost:8000 (api)        NEXT_PUBLIC_API_URL
+             web server code -------> http://api:8000              API_URL_INTERNAL (compose network)
+             api container ---------> host.docker.internal:54321   local Supabase on the host
+```
+
+Inside a container, `localhost` means the container itself, so server-side calls use the service name and Supabase uses `host.docker.internal`.
+
+### Commands
+
+```
+npx supabase start               # database, auth, storage (needs Docker Desktop)
+docker compose up --build        # web + api
+docker compose up web            # one service only
+docker compose run --rm --no-deps api pytest
+npx supabase test db             # row-level security tests
+```
+
+## 10. Scale and reliability
+
+### Load estimate
+
+One wedding is small: about 300 guests and roughly 1,000 to 2,000 page views in total. The shape matters more than the size. Almost all traffic arrives in the hour after the family sends the WhatsApp message, and again around the RSVP deadline and the wedding day. Reads dominate; the writes are one RSVP per guest and a few blessings.
+
+A single API instance and the Supabase free or entry tier carry this comfortably. The design goal is to be correct and always reachable on the wedding day, not to scale out.
+
+### What can go wrong
+
+| Risk | Effect | Mitigation |
+| --- | --- | --- |
+| Supabase free project pauses after a week idle | Invitation link stops working | Use a paid project (or keep it active) before the first real wedding; check the current terms |
+| API host sleeps when idle on a free plan | First RSVP or blessing waits many seconds | Paid always-on instance for real weddings, or a keep-alive ping |
+| Guest page depends on the API being up | Blank page if the API is down | Render the invitation from published data in the web app; only RSVP and blessing need the API |
+| Public POST abuse (spam RSVPs, fake blessings) | Noisy ledger | Rate limits by IP and wedding; family confirms every blessing; unguessable guest tokens |
+| UPI link fails in a guest's app | Blessing not sent | Offer link, QR and copy-ID; the blessing stays optional |
+| Photo storage fills (1 GB free) | Uploads fail | Resize on upload, per-wedding cap, move to cheaper object storage before Phase 2 |
+| Bad migration | Data loss or downtime | Migrations are tested locally on a fresh database; back up before the first real wedding |
+
+### What to watch
+
+API error rate and latency on `/weddings/{slug}/rsvp` and `/blessings`, storage use per wedding, database size, and failed UPI confirmations ("Did the payment go through?" answered no). PostHog is optional after Phase 1.
+
+## 11. Trade-offs we accepted
+
+| Decision | Benefit | Cost |
+| --- | --- | --- |
+| Two servers (Next.js and FastAPI) | Rules for money and guest data live in one place | Two deployments and two sets of environment variables |
+| All writes through the API | Guests cannot forge rows | Every form needs an endpoint |
+| UPI deep link, no gateway | No licence, no money held | No payment callback, so the family confirms by hand |
+| Supabase outside docker-compose | Matches the hosted service | Needs the Supabase CLI as well as Docker |
+| One wedding at a time (Phase 1 to 3) | Small, finishable scope | Partner and multi-wedding features wait for Phase 4 |
+
+### What we would revisit as it grows
+
+- Photo storage and image resizing (move off the free Supabase tier).
+- A job queue for reminders and thank-you notes (WhatsApp sending, Phase 2 onward).
+- Caching published invitation pages at the edge if one wedding goes viral.
+- A staging environment once there are paying families.
+- Splitting the API only if a second team or heavy background work appears. It is one service on purpose.
+
+## 12. Local development without Docker
 
 - Web: `cd web && npm run dev` (http://localhost:3000)
 - API: `cd api && uvicorn app.main:app --reload`, tests with `pytest`
-- Database: `npx supabase start` (needs Docker Desktop; the local database uses port 54422 because 54322 was blocked on this machine), `npx supabase db reset` to apply migrations, `npx supabase test db` to run the row-level security tests
+- Database: `npx supabase start`, `npx supabase db reset` to apply migrations. The local database uses port 54422 because 54322 was blocked on this machine.
 - Secrets: `web/.env.local` and `api/.env`, copied from `.env.example`, never committed
 
-## 10. What is not built yet
+## 13. What is not built yet
 
 Auth (phone OTP), the template renderer, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.

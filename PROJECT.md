@@ -150,11 +150,11 @@ Every table has `id uuid primary key`, `created_at timestamptz default now()`.
 
 | Table | Columns |
 | --- | --- |
-| `weddings` | `slug` (unique), `status` (`draft`/`published`), `bride_name`, `groom_name`, `story`, `cover_photo_url`, `template_id`, `color_preset`, `font_pair`, `music_url`, `sections_enabled text[]`, `languages text[]`, `bride_side_upi`, `groom_side_upi`, `bride_side_payee_name`, `groom_side_payee_name`, `blessings_enabled bool` |
+| `weddings` | `slug` (unique), `status` (`draft`/`published`), `bride_name`, `groom_name`, `story`, `cover_photo_url`, `template_id`, `color_preset`, `font_pair`, `music_url`, `sections_enabled text[]`, `languages text[]`, `bride_side_upi`, `groom_side_upi`, `bride_side_payee_name`, `groom_side_payee_name`, `blessings_enabled bool`, `rsvp_deadline date` (nullable) |
 | `family_members` | `wedding_id`, `user_id` (Supabase auth), `phone`, `side` (`bride`/`groom`), `role` (`owner`/`helper`) |
-| `events` | `wedding_id`, `name`, `starts_at`, `venue_name`, `venue_address`, `map_url`, `sort_order` |
-| `guests` | `wedding_id`, `display_name`, `phone` (nullable), `side`, `link_code` (unique, nullable) |
-| `rsvps` | `guest_id`, `event_id`, `attending bool`, `party_size int`, `food_choice` (`veg`/`jain`/`other`) |
+| `events` | `wedding_id`, `name`, `starts_at`, `venue_name`, `venue_address`, `map_url`, `sort_order`, `kind`, `dress_code` (nullable), `note` (nullable) |
+| `guests` | `wedding_id`, `display_name`, `phone` (nullable), `side`, `link_code` (unique, nullable), `source` (`open`/`personal`/`family_added`) |
+| `rsvps` | `guest_id`, `event_id`, `attending bool`, `party_size int`, `food_choice` (`veg`/`jain`/`other`), `allergies` (nullable) |
 | `wishes` | `wedding_id`, `title`, `image_url`, `sort_order` (no target amount, ever) |
 | `blessings` | `wedding_id`, `guest_id` (nullable), `giver_name`, `wish_id` (nullable), `amount_paise int`, `note`, `media_url` (nullable), `method` (`upi`/`cash`/`gift`), `status` (`claimed`/`received`/`rejected`), `side`, `received_by` (family_member id), `received_at` |
 | `thank_yous` | `blessing_id`, `message`, `photo_url`, `sent_at` |

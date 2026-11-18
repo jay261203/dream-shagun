@@ -228,15 +228,15 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [ ] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
 - [ ] P1-03 Phone OTP login and "create wedding" form (names, slug, cover photo, story)
-- [ ] P1-04 Events editor (add, edit, reorder; map link)
+- [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
 - [ ] P1-05 Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
 - [ ] P1-05a "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page
-- [ ] P1-06 RSVP per event with party size and food choice
+- [ ] P1-06 RSVP per event with party size, food choice and allergies; optional RSVP deadline; add-to-calendar link on events
 - [ ] P1-07 Wishes editor and UPI IDs for both sides
 - [ ] P1-08 Blessing flow: choose side, wish, amount (₹501, ₹1,001, ₹2,100, ₹5,100, custom), name, note
 - [ ] P1-09 UPI intent route, QR generation, pay screen, "Did the payment go through?" step
 - [ ] P1-10 Ledger page: list, filter by side, Received and Not received buttons, totals of received only
-- [ ] P1-11 RSVP summary page: headcount per event
+- [ ] P1-11 RSVP summary page: headcount per event, veg/Jain/other split and allergies list (the caterer summary)
 - [ ] P1-12 Share button with a ready WhatsApp message
 - [ ] P1-13 Privacy pass: confirm no amount or guest list is reachable without family login
 - [ ] P1-14 Deploy web and API; test the whole flow on two phones
@@ -250,7 +250,9 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P2-02 Counter mode: large-button screen for fast name and amount entry, works with poor signal
 - [ ] P2-03 Printable QR standee (PDF)
 - [ ] P2-04 "Can't attend" link with voice or video blessing upload
-- [ ] P2-05 Guest-specific links that fill in the family name
+- [ ] P2-05 Guest-specific links that fill in the family name, with household label and plus-one limit
+- [ ] P2-05b Send queue: one WhatsApp button per household with a ready message, "Not replied" filter and Remind button (`wa.me` links, we send nothing ourselves)
+- [ ] P2-05c Optional `travel` and `faq` sections on the guest page
 - [ ] P2-06 Gujarati, Hindi and English invitation text
 - [ ] P2-07 Wedding album: family uploads photos, grouped by event, shown as a gallery on the wedding link
 - [ ] P2-08 Guest uploads from the link or the venue QR, visible only after family approval
@@ -273,7 +275,7 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P4-02 Expense log: vendor, which side paid, advance, balance due, bill photo
 - [ ] P4-03 Calculations: catering from per-plate rate times confirmed guests, balance per vendor, each side's share
 - [ ] P4-04 Payment due reminders
-- [ ] P4-05 Checklist and timeline with owners
+- [ ] P4-05 Checklist and timeline with owners; tasks stored as days from the wedding so they move with the date (starter list in `docs/wedding-timeline.md`)
 - [ ] P4-06 Vendor list per wedding
 - [ ] P4-07 Guest list import and grouping
 - [ ] P4-08 Partner workspace for several weddings
@@ -288,6 +290,11 @@ Ideas that are not in any phase yet. Add here instead of building.
 - WhatsApp Business API messages sent by the product
 - More invitation templates
 - Custom domains
+- Save the Date page (same template, fewer sections), from `docs/reference-digital-yes.md`
+- Table seating with auto-assign (after P4-07)
+- Wedding-day mode and printable day binder
+- Weather forecast on the wedding-day screen
+- Offline use for the family dashboard beyond counter mode
 
 ## 13. Open questions
 
@@ -305,3 +312,4 @@ Ideas that are not in any phase yet. Add here instead of building.
 | 15 Nov 2026 | Direct UPI to the family; no gateway, no money held |
 | 15 Nov 2026 | No targets or progress bars |
 | 15 Nov 2026 | Core (phases 1 to 3) before wedding management (phase 4) |
+| 18 Nov 2026 | Studied The Digital Yes for features only; notes in `docs/reference-digital-yes.md`. Small additions to existing tasks; the rest in the parking lot |

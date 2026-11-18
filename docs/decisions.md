@@ -12,4 +12,5 @@ One line per decision, newest last.
 | 17 Nov 2026 | Sprint 0 started early: 17 to 22 Nov; Sprint 1 moved to 23 to 29 Nov | Started a week ahead of plan |
 | 18 Nov 2026 | Pay screen: blessing is optional and UPI is a convenience, not a requirement. Phones show "Pay with UPI" first, then the QR and "Copy UPI ID" as fallbacks. Desktop shows the QR first. After paying, ask "Did the payment go through?" | Default from the plan. Per-app test results were not recorded, so revisit if guests report a link that fails |
 | 18 Nov 2026 | Supabase free tier: 500 MB database, 1 GB file storage, 5 GB egress, 50,000 monthly users, paused after 1 week idle, 2 active projects | Photo album (phase 2) will outgrow 1 GB; revisit before P2-07 |
+| 18 Nov 2026 | Borrow feature ideas from The Digital Yes (RSVP details, WhatsApp send queue, date-relative checklist), never their designs or copy | Matches the template rule in PROJECT.md 1b; specs in `docs/invitation-spec.md` and `docs/wedding-timeline.md` |
 | 17 Nov 2026 | Employment contract check: side project is legal and allowed by the company | Confirmed by Jay; no written approval needed |

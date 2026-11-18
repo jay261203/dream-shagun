@@ -225,7 +225,7 @@ Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4,
 
 Test: one real wedding uses it and at least 10 guests send a blessing through it.
 
-- [ ] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
+- [x] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [ ] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
 - [ ] P1-03 Phone OTP login and "create wedding" form (names, slug, cover photo, story)
 - [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)

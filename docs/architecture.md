@@ -17,7 +17,7 @@ Status legend: **built** (in the repo and working), **written** (code exists, no
                          ┌─────────────▼──────────────┐  ┌────────────────────┐
                          │  Render / Railway          │  │  Supabase          │
                          │  FastAPI                   │─►│  Postgres + RLS    │
-                         │  validation, UPI link, QR, │  │  Phone OTP auth    │
+                         │  validation, UPI link, QR, │  │  Google sign-in    │
                          │  rate limits, all writes   │  │  Storage (photos)  │
                          └────────────────────────────┘  └────────────────────┘
 
@@ -37,7 +37,7 @@ Three ideas shape everything:
 | Web app | Next.js 16 (App Router), React 19, TypeScript, Tailwind 4 | Server rendering gives fast first paint and correct WhatsApp link previews; one codebase for guest page and dashboard | scaffolded |
 | API | FastAPI on Python 3.12 | Small, typed, easy to test; keeps business rules (UPI, ledger, rate limits) in one place outside the UI | health route + `upi.py` built |
 | Database | Supabase Postgres | Real relational data with row-level security; free tier is enough for the first weddings | built and tested (16 row-level security checks) |
-| Auth | Supabase phone OTP | Family members only; most people here trust a phone number more than an email | planned (DS-12) |
+| Auth | Supabase Auth with Google sign-in (phone OTP later) | Family members only; no SMS provider needed to start, and the API only checks a Supabase token either way | planned (DS-12) |
 | File storage | Supabase Storage | Photos and covers; limit is 1 GB on the free tier, so revisit before the album (P2-07) | planned |
 | Templates | Plain HTML and CSS rendered with Handlebars | New invitation looks without touching product code; Handlebars escapes values so names cannot inject HTML | planned (DS-13) |
 | Payment | `upi://pay` deep link plus a QR code, no gateway | No payment licence, no money held, nothing to reconcile with a bank | link builder built |
@@ -105,7 +105,7 @@ Known gap: a logged-in family member of a different wedding can read the UPI IDs
 
 ```
 Gallery ─► live preview ─► "Try with your names" (no login)
-        ─► "Save and continue" ─► phone OTP ─► draft saved
+        ─► "Save and continue" ─► Google sign-in ─► draft saved
         ─► editor (events, journey, sections, theme) ─► draft link for family check
         ─► Publish ─► live link + WhatsApp message + QR code
 ```
@@ -260,4 +260,4 @@ API error rate and latency on `/weddings/{slug}/rsvp` and `/blessings`, storage 
 
 ## 13. What is not built yet
 
-Auth (phone OTP), the template renderer, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.
+Auth (Google sign-in), the template renderer, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.

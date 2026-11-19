@@ -15,4 +15,5 @@ One line per decision, newest last.
 | 18 Nov 2026 | Borrow feature ideas from The Digital Yes (RSVP details, WhatsApp send queue, date-relative checklist), never their designs or copy | Matches the template rule in PROJECT.md 1b; specs in `docs/invitation-spec.md` and `docs/wedding-timeline.md` |
 | 18 Nov 2026 | Clients get no insert/update/delete on any table; all writes go through the API with the service role. Guests read published weddings without UPI columns | A guest could otherwise insert a blessing already marked received; API validates and rate-limits (PROJECT.md section 8) |
 | 18 Nov 2026 | Dockerize web and api with a `dev` and `prod` target each; docker-compose for local; Supabase stays on the Supabase CLI | Same runtime locally and in production, any service can run alone; Supabase CLI already matches the hosted service |
+| 19 Nov 2026 | Family login is Google sign-in first; phone OTP moves to the parking lot | No SMS provider needed to start; the API only checks a Supabase token either way |
 | 17 Nov 2026 | Employment contract check: side project is legal and allowed by the company | Confirmed by Jay; no written approval needed |

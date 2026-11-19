@@ -26,6 +26,13 @@ uvicorn app.main:app --reload      # http://localhost:8000/health
 pytest
 ```
 
+## Try it on your phone
+
+1. `npx supabase start` (needs Docker Desktop). `npx supabase db reset` loads a sample wedding.
+2. `cd web && npm run dev`. In dev, `web/.env.development.local` points the app at this local Supabase, not the hosted project (delete that file to use hosted).
+3. Put the phone on the same Wi-Fi and open `http://<this computer's address>:3000/w/sample-marigold`. Find the address with `ipconfig` (IPv4 Address).
+4. If the dev server blocks the address, add it to `ALLOWED_DEV_ORIGINS` (comma separated) and restart. Home network ranges are already allowed.
+
 ## Run with Docker
 
 Needs Docker Desktop. Supabase runs through its CLI; web and api run in compose.

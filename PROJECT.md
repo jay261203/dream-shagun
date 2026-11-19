@@ -153,7 +153,7 @@ Every table has `id uuid primary key`, `created_at timestamptz default now()`.
 
 | Table | Columns |
 | --- | --- |
-| `weddings` | `slug` (unique), `status` (`draft`/`published`), `bride_name`, `groom_name`, `story`, `cover_photo_url`, `template_id`, `color_preset`, `font_pair`, `music_url`, `sections_enabled text[]`, `languages text[]`, `bride_side_upi`, `groom_side_upi`, `bride_side_payee_name`, `groom_side_payee_name`, `blessings_enabled bool`, `rsvp_deadline date` (nullable) |
+| `weddings` | `slug` (unique), `status` (`draft`/`published`), `bride_name`, `groom_name`, `story`, `cover_photo_url`, `template_id`, `color_preset`, `font_pair`, `music_url`, `sections_enabled text[]`, `languages text[]`, `bride_side_upi`, `groom_side_upi`, `bride_side_payee_name`, `groom_side_payee_name`, `blessings_enabled bool`, `rsvp_deadline date` (nullable), `wedding_date date` (nullable) |
 | `family_members` | `wedding_id`, `user_id` (Supabase auth), `email`, `phone` (nullable), `side` (`bride`/`groom`), `role` (`owner`/`helper`) |
 | `events` | `wedding_id`, `name`, `starts_at`, `venue_name`, `venue_address`, `map_url`, `sort_order`, `kind`, `dress_code` (nullable), `note` (nullable) |
 | `guests` | `wedding_id`, `display_name`, `phone` (nullable), `side`, `link_code` (unique, nullable), `source` (`open`/`personal`/`family_added`) |
@@ -230,7 +230,7 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 
 - [x] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [x] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
-- [ ] P1-03 Google login and "create wedding" form (names, slug, cover photo, story)
+- [ ] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Backend done: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()` function. Left: Google sign-in and the form screens (after the design review)
 - [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
 - [ ] P1-05 Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
 - [ ] P1-05a "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page

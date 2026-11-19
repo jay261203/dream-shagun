@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
-from app.routers import health, me
+from app.routers import health, me, weddings
 
 logger = logging.getLogger("dream_shagun")
 
@@ -28,3 +28,4 @@ async def unhandled_error(request: Request, exc: Exception) -> JSONResponse:
 
 app.include_router(health.router)
 app.include_router(me.router)
+app.include_router(weddings.router)

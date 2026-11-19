@@ -1,0 +1,60 @@
+import type { WeddingData, WeddingEvent, WeddingMoment } from "./templates/types";
+
+const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+// Only columns the anonymous role may read. Asking for UPI columns here would be refused by the database.
+const WEDDING_COLUMNS = [
+  "id",
+  "slug",
+  "bride_name",
+  "groom_name",
+  "wedding_date",
+  "story",
+  "cover_photo_url",
+  "template_id",
+  "color_preset",
+  "font_pair",
+  "music_url",
+  "sections_enabled",
+  "languages",
+  "blessings_enabled",
+  "rsvp_deadline",
+].join(",");
+
+type WeddingRow = Omit<WeddingData, "events" | "moments"> & { id: string };
+
+async function rest<T>(path: string): Promise<T> {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!base || !key) throw new Error("NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be set");
+  const res = await fetch(`${base}/rest/v1/${path}`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Supabase ${res.status} for ${path.split("?")[0]}`);
+  return (await res.json()) as T;
+}
+
+/**
+ * The published wedding with this link name, or null. Row-level security hides drafts from the anonymous role,
+ * so a draft looks exactly like a link that does not exist.
+ */
+export async function getPublishedWedding(slug: string): Promise<WeddingData | null> {
+  if (!SLUG.test(slug) || slug.length < 3 || slug.length > 60) return null;
+
+  const rows = await rest<WeddingRow[]>(`weddings?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=${WEDDING_COLUMNS}`);
+  const wedding = rows[0];
+  if (!wedding) return null;
+
+  const id = encodeURIComponent(wedding.id);
+  const [events, moments] = await Promise.all([
+    rest<WeddingEvent[]>(
+      `events?wedding_id=eq.${id}&select=name,starts_at,venue_name,venue_address,map_url,sort_order,kind,dress_code,note&order=sort_order,starts_at`,
+    ),
+    rest<WeddingMoment[]>(`moments?wedding_id=eq.${id}&select=title,happened_on,caption,photo_url,sort_order&order=sort_order`),
+  ]);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: _id, ...rest_ } = wedding;
+  return { ...rest_, events, moments };
+}

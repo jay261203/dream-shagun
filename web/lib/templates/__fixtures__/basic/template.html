@@ -1,0 +1,18 @@
+<main>
+<section data-section="cover">
+<h1>{{bride_name}} and {{groom_name}}</h1>
+<p>{{date_long}}</p>
+<img src="assets/cover.jpg" alt="">
+<div data-slot="countdown" data-target="{{first_event_iso}}"></div>
+</section>
+<section data-section="journey" data-needs="moments">
+<h2>Our journey</h2>
+{{#each moments}}<article><h3>{{title}}</h3><p>{{date_label}} {{caption}}</p></article>{{/each}}
+</section>
+<section data-section="events" data-needs="events">
+<h2>Events</h2>
+{{#each events}}<article><h3>{{name}}</h3><p>{{day_name}} {{date_long}} {{time}}</p>{{#if has_map}}<a href="{{map_url}}">Get directions</a>{{/if}}</article>{{/each}}
+</section>
+<section data-section="rsvp"><div data-slot="rsvp"></div></section>
+<section data-section="blessing"><div data-slot="blessing"></div></section>
+</main>

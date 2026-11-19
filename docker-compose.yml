@@ -52,6 +52,8 @@ services:
         condition: service_healthy
     volumes:
       - ./web:/app
+      # Invitation templates live outside web/. /app/../templates is /templates, the renderer's default.
+      - ./templates:/templates:ro
       # Keep the container's own node_modules and build cache, not the Windows ones.
       - /app/node_modules
       - /app/.next

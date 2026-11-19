@@ -1,0 +1,3 @@
+body { margin: 0; background: var(--color-bg); color: #222; font-family: var(--font-body); }
+h1, h2, h3 { font-family: var(--font-heading); color: var(--color-primary); }
+section { background-image: url(assets/pattern.png); }

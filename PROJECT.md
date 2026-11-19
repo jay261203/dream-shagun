@@ -220,7 +220,7 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 
 Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
 
-- [ ] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes
+- [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [ ] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button
 - [ ] P1-T3 Template gallery with full live preview and "Try with your names" before login
 - [ ] P1-T4 Editor with phone-sized live preview: sections on or off, colour preset, font pair, music
@@ -242,7 +242,7 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P1-11 RSVP summary page: headcount per event, veg/Jain/other split and allergies list (the caterer summary)
 - [ ] P1-12 Share button with a ready WhatsApp message
 - [ ] P1-13 Privacy pass: confirm no amount or guest list is reachable without family login
-- [ ] P1-14 Deploy web (Vercel) and API (`prod` Docker image); use a paid Supabase project and an always-on API before a real wedding; test the whole flow on two phones
+- [ ] P1-14 Deploy web (Vercel; the templates/ folder must ship with it, set `TEMPLATES_DIR` or include files outside the web root) and API (`prod` Docker image); use a paid Supabase project and an always-on API before a real wedding; test the whole flow on two phones
 - [ ] P1-15 Run it at the first real wedding and write down what went wrong
 
 ## 11. Backlog (do not start until the phase before passes)

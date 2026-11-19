@@ -1,0 +1,18 @@
+{
+  "id": "basic",
+  "name": "Basic test template",
+  "tradition": ["any"],
+  "style": "plain",
+  "languages": ["en"],
+  "sections": ["cover", "journey", "events", "rsvp", "blessing"],
+  "alwaysOn": ["cover"],
+  "colorPresets": {
+    "warm": { "name": "Warm", "vars": { "--color-primary": "#b8451a", "--color-bg": "#fffaf3" } },
+    "forest": { "name": "Forest", "vars": { "--color-primary": "#2f6b4f", "--color-bg": "#f6faf7" } }
+  },
+  "fontPairs": {
+    "serif": { "name": "Serif", "vars": { "--font-heading": "'Fraunces', serif", "--font-body": "'Figtree', sans-serif" }, "googleFonts": ["Fraunces:wght@400;600", "Figtree:wght@400;700"] }
+  },
+  "defaults": { "colorPreset": "warm", "fontPair": "serif" },
+  "licence": "Test fixture, not for production"
+}

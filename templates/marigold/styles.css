@@ -1,0 +1,128 @@
+/* Marigold. Colours and fonts come from CSS variables set by the preset and font pair. */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.08; margin: 0; }
+h2 { font-size: 34px; margin-bottom: 20px; }
+h3 { font-size: 22px; }
+p { margin: 0; }
+a { color: var(--color-primary); }
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+.muted { color: var(--color-muted); }
+.wrap { max-width: 560px; margin: 0 auto; }
+
+/* Buttons: one primary look, one outline look. */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 28px; border: 0; border-radius: 12px;
+  background: #fff; color: #231a14; font: 700 17px var(--font-body); text-decoration: none; cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+.btn--line { background: transparent; border: 1.5px solid var(--color-ink); color: var(--color-ink); margin-top: 8px; width: 100%; }
+.btn--line:hover { background: var(--color-ink); color: var(--color-bg); }
+
+/* Cover: a photograph in two doors over a quiet inside panel. */
+.cover { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; background: var(--color-bg); }
+.cover__inside {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 24px; text-align: center; color: var(--color-ink);
+}
+.names--inside { font-family: var(--font-heading); font-size: 40px; line-height: 1.1; font-weight: 600; color: var(--color-primary); }
+.names--inside span { font-weight: 400; }
+.cover__date { font-size: 18px; letter-spacing: .5px; }
+.cover__cue { margin-top: 24px; font-size: 14px; color: var(--color-muted); }
+.kicker { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; }
+
+.cover__door { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; background: #231a14; transition: transform 1s cubic-bezier(.7, 0, .2, 1); will-change: transform; }
+.cover__door--l { left: 0; width: calc(50% + 1px); } /* 1px overlap hides the seam */
+.cover__door--r { right: 0; }
+.cover__door img { position: absolute; top: 0; height: 100%; width: 200%; max-width: none; object-fit: cover; }
+.cover__door--l img { left: 0; }
+.cover__door--r img { right: 0; }
+.cover__door::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 8, 0, .55), rgba(20, 8, 0, .35) 45%, rgba(20, 8, 0, .8)); }
+
+.cover__front {
+  position: relative; z-index: 2; min-height: 100vh; min-height: 100svh; padding: 72px 24px 40px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; color: #fff;
+}
+.names { font-size: 76px; line-height: .98; }
+.names span { display: block; font-size: 34px; font-weight: 400; margin: 6px 0; }
+.cover__front .btn { margin-top: 24px; min-width: 220px; }
+
+.cover.is-opening .cover__door--l { transform: translateX(-101%); }
+.cover.is-opening .cover__door--r { transform: translateX(101%); }
+.cover.is-opening .cover__front { opacity: 0; pointer-events: none; transition: opacity .5s ease; }
+.cover.is-open .cover__door, .cover.is-open .cover__front { visibility: hidden; }
+
+/* Music button: always reachable, never starts by itself. */
+.music {
+  position: absolute; top: 14px; right: 14px; z-index: 3; min-height: 44px; padding: 0 18px;
+  border: 1.5px solid rgba(255, 255, 255, .9); border-radius: 999px; background: rgba(20, 8, 0, .35); color: #fff;
+  font: 600 14px var(--font-body); cursor: pointer;
+}
+.cover.is-open .music { border-color: var(--color-ink); background: var(--color-surface); color: var(--color-ink); }
+.music[aria-pressed="true"] { background: #fff; color: #231a14; }
+
+/* Petals drift down the front of the cover. */
+.petal {
+  position: absolute; top: -24px; width: 14px; height: 18px; border-radius: 80% 0 80% 0;
+  background: var(--color-accent); opacity: .85; animation: fall linear infinite; pointer-events: none;
+}
+@keyframes fall {
+  0% { transform: translate3d(0, -30px, 0) rotate(0); }
+  100% { transform: translate3d(var(--drift, 40px), 105vh, 0) rotate(300deg); }
+}
+
+/* Content blocks. */
+.block { padding: 56px 24px; }
+.block--tint { background: color-mix(in srgb, var(--color-primary) 6%, var(--color-bg)); }
+.story { font-size: 19px; line-height: 1.65; white-space: pre-line; }
+
+.timeline { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 2px solid var(--color-line); display: flex; flex-direction: column; gap: 28px; }
+.timeline li { position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -27px; top: 6px; width: 12px; height: 12px; border-radius: 999px; background: var(--color-primary); }
+.timeline__date { font-size: 13px; font-weight: 700; color: var(--color-primary); }
+.timeline h3 { margin: 2px 0 4px; }
+.timeline__photo { display: block; width: 100%; max-height: 260px; object-fit: cover; border-radius: 20px; margin-top: 12px; }
+
+.events { display: flex; flex-direction: column; gap: 16px; }
+.event {
+  display: flex; flex-direction: column; gap: 6px; padding: 20px; background: var(--color-surface);
+  border: 1px solid var(--color-line); border-radius: 20px;
+}
+.event__when { font-weight: 600; }
+.event__where { font-size: 18px; }
+.event__muted { color: var(--color-muted); font-size: 15px; }
+
+/* A section whose slot has no component yet stays out of sight rather than showing a bare heading. */
+.block--slot:has([data-slot]:empty) { display: none; }
+[data-slot="countdown"]:empty { display: none; }
+
+.credits { padding: 28px 24px 40px; font-size: 13px; color: var(--color-muted); text-align: center; border-top: 1px solid var(--color-line); }
+
+/* Scroll reveal: the script switches it on, so nothing is hidden without it. */
+.js-reveal [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.js-reveal [data-reveal].is-visible { opacity: 1; transform: none; }
+
+@media (min-width: 720px) {
+  .names { font-size: 104px; }
+  .names--inside { font-size: 56px; }
+  .block { padding: 80px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cover__door, .cover__front, .btn, .js-reveal [data-reveal] { transition: none; }
+  .petal { display: none; }
+  .js-reveal [data-reveal] { opacity: 1; transform: none; }
+}

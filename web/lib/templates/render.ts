@@ -7,6 +7,11 @@ import type { LoadedTemplate, WeddingData } from "./types";
 const esc = Handlebars.Utils.escapeExpression;
 const LANG = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$/;
 
+/** A list with no items, or any empty or false value, counts as nothing to show. */
+function isEmpty(value: unknown): boolean {
+  return Array.isArray(value) ? value.length === 0 : !value;
+}
+
 export type RenderOptions = {
   /** Public origin, for absolute links in share tags. */
   origin: string;
@@ -44,7 +49,10 @@ function shareTags(title: string, description: string, url: string, image: strin
 /** Fill a template with one wedding's data and return a finished HTML page. */
 export function renderWedding(template: LoadedTemplate, data: WeddingData, options: RenderOptions): string {
   const { manifest } = template;
-  const view = prepare(data);
+  const base = prepare(data);
+  // Music: the wedding's own file if it has one, else the template's default (a file under its assets/ folder).
+  const defaultMusic = base.music_url === null ? (manifest.music?.src ?? null) : null;
+  const view = { ...base, music_url: base.music_url ?? defaultMusic, music_is_default: defaultMusic !== null };
 
   // 1. Fill placeholders. Handlebars escapes every {{value}}; templates may not use raw output (checked at load).
   const filled = Handlebars.create().compile(template.html)(view);
@@ -56,7 +64,7 @@ export function renderWedding(template: LoadedTemplate, data: WeddingData, optio
     const name = node.getAttribute("data-section") ?? "";
     const needs = node.getAttribute("data-needs");
     const switchedOff = !manifest.alwaysOn.includes(name) && !enabled.has(name);
-    const needsMissing = needs ? !(Array.isArray((view as Record<string, unknown>)[needs]) && ((view as Record<string, unknown>)[needs] as unknown[]).length > 0) : false;
+    const needsMissing = needs ? isEmpty((view as Record<string, unknown>)[needs]) : false;
     if (switchedOff || needsMissing) node.remove();
   }
   const body = rewriteAssets(manifest.id, root.toString());

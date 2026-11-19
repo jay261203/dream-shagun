@@ -1,0 +1,68 @@
+{
+  "id": "marigold",
+  "name": "Marigold",
+  "tradition": ["hindu"],
+  "style": "warm",
+  "languages": ["en", "hi"],
+  "sections": ["cover", "couple", "journey", "events", "rsvp", "blessing"],
+  "alwaysOn": ["cover"],
+  "colorPresets": {
+    "marigold": {
+      "name": "Marigold",
+      "vars": {
+        "--color-primary": "#b8451a",
+        "--color-primary-dark": "#8f3412",
+        "--color-accent": "#e9a23b",
+        "--color-bg": "#fff9f0",
+        "--color-surface": "#ffffff",
+        "--color-ink": "#231a14",
+        "--color-muted": "#6b5d52",
+        "--color-line": "#eadcc8"
+      }
+    },
+    "rose": {
+      "name": "Rose",
+      "vars": {
+        "--color-primary": "#a8284d",
+        "--color-primary-dark": "#7f1c39",
+        "--color-accent": "#e5a0b0",
+        "--color-bg": "#fff7f8",
+        "--color-surface": "#ffffff",
+        "--color-ink": "#2a1a1e",
+        "--color-muted": "#6e5a60",
+        "--color-line": "#ebd3d8"
+      }
+    },
+    "forest": {
+      "name": "Forest",
+      "vars": {
+        "--color-primary": "#2f6b4f",
+        "--color-primary-dark": "#214d38",
+        "--color-accent": "#c9a24a",
+        "--color-bg": "#f7faf5",
+        "--color-surface": "#ffffff",
+        "--color-ink": "#17231c",
+        "--color-muted": "#55655b",
+        "--color-line": "#d5e0d6"
+      }
+    }
+  },
+  "fontPairs": {
+    "classic": {
+      "name": "Classic",
+      "vars": { "--font-heading": "'Fraunces', Georgia, serif", "--font-body": "'Figtree', system-ui, sans-serif" },
+      "googleFonts": ["Fraunces:opsz,wght@9..144,400;9..144,600", "Figtree:wght@400;500;700"]
+    },
+    "soft": {
+      "name": "Soft",
+      "vars": { "--font-heading": "'Cormorant Garamond', Georgia, serif", "--font-body": "'DM Sans', system-ui, sans-serif" },
+      "googleFonts": ["Cormorant Garamond:wght@500;600", "DM Sans:wght@400;500;700"]
+    }
+  },
+  "defaults": { "colorPreset": "marigold", "fontPair": "classic" },
+  "music": {
+    "src": "assets/veena.mp3",
+    "licence": "CC0 1.0. Shri Nilotpala Nayike (composer Muthuswami Dikshitar), played on the veena by L Ramakrishnan, Chennai, 2011. Source: Internet Archive item shrInilotpalanayike, also on Wikimedia Commons. First 90 seconds from 0:20, faded in and out, MP3 96 kbps."
+  },
+  "licence": "Own design. Default cover photograph: Marigold Garland, Kolkata, by Biswarup Ganguly, CC BY 3.0, Wikimedia Commons. Fonts: Fraunces, Figtree, Cormorant Garamond and DM Sans, SIL Open Font Licence, Google Fonts."
+}

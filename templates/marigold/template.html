@@ -1,0 +1,90 @@
+<section id="top" data-section="cover" class="cover" data-cover>
+  <div class="cover__inside">
+    <p class="kicker">Together with their families</p>
+    <p class="names--inside">{{bride_name}} <span>&amp;</span> {{groom_name}}</p>
+    {{#if date_long}}<p class="cover__date">{{date_long}}</p>{{/if}}
+    <div data-slot="countdown" data-target="{{first_event_iso}}"></div>
+    <p class="cover__cue">Scroll to see the events</p>
+  </div>
+
+  <div class="cover__door cover__door--l" aria-hidden="true"><img src="{{#if cover_photo_url}}{{cover_photo_url}}{{else}}assets/marigold.jpg{{/if}}" alt=""></div>
+  <div class="cover__door cover__door--r" aria-hidden="true"><img src="{{#if cover_photo_url}}{{cover_photo_url}}{{else}}assets/marigold.jpg{{/if}}" alt=""></div>
+
+  <div class="cover__front">
+    <p class="kicker">With the blessings of our families</p>
+    <h1 class="names">{{bride_name}}<span>and</span>{{groom_name}}</h1>
+    {{#if date_long}}<p class="cover__date">{{date_long}}</p>{{/if}}
+    <a class="btn" href="#details" data-open>Open invitation</a>
+  </div>
+
+  {{#if music_url}}
+  <button type="button" class="music" data-music-button aria-pressed="false">Tap to play music</button>
+  <audio data-music src="{{music_url}}" loop preload="none"></audio>
+  {{/if}}
+</section>
+
+<div id="details">
+
+<section data-section="couple" data-needs="story" class="block">
+  <div class="wrap">
+    <h2 data-reveal>Our story</h2>
+    <p class="story" data-reveal>{{story}}</p>
+  </div>
+</section>
+
+<section data-section="journey" data-needs="moments" class="block block--tint">
+  <div class="wrap">
+    <h2 data-reveal>Our journey</h2>
+    <ol class="timeline">
+      {{#each moments}}
+      <li data-reveal>
+        {{#if date_label}}<p class="timeline__date">{{date_label}}</p>{{/if}}
+        <h3>{{title}}</h3>
+        {{#if caption}}<p>{{caption}}</p>{{/if}}
+        {{#if photo_url}}<img class="timeline__photo" src="{{photo_url}}" alt="" loading="lazy">{{/if}}
+      </li>
+      {{/each}}
+    </ol>
+  </div>
+</section>
+
+<section data-section="events" data-needs="events" class="block">
+  <div class="wrap">
+    <h2 data-reveal>Events</h2>
+    <div class="events">
+      {{#each events}}
+      <article class="event" data-reveal>
+        <h3>{{name}}</h3>
+        <p class="event__when">{{day_name}}, {{date_long}} at {{time}}</p>
+        {{#if venue_name}}<p class="event__where">{{venue_name}}</p>{{/if}}
+        {{#if venue_address}}<p class="event__muted">{{venue_address}}</p>{{/if}}
+        {{#if dress_code}}<p class="event__muted">Dress code: {{dress_code}}</p>{{/if}}
+        {{#if note}}<p class="event__muted">{{note}}</p>{{/if}}
+        {{#if has_map}}<a class="btn btn--line" href="{{map_url}}" rel="noopener">Get directions</a>{{/if}}
+      </article>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<section data-section="rsvp" class="block block--tint block--slot">
+  <div class="wrap">
+    <h2 data-reveal>Will you come?</h2>
+    {{#if rsvp_deadline_long}}<p class="muted">Please reply by {{rsvp_deadline_long}}.</p>{{/if}}
+    <div data-slot="rsvp"></div>
+  </div>
+</section>
+
+<section data-section="blessing" data-needs="blessings_enabled" class="block block--slot">
+  <div class="wrap">
+    <h2 data-reveal>Send your blessings</h2>
+    <p class="muted">This is optional. Your gift goes straight to the family.</p>
+    <div data-slot="blessing"></div>
+  </div>
+</section>
+
+<footer class="credits">
+  <p>Made with Dream Shagun.{{#unless cover_photo_url}} Photograph: Biswarup Ganguly, CC BY 3.0, via Wikimedia Commons.{{/unless}}{{#if music_is_default}} Music: L Ramakrishnan, CC0.{{/if}}</p>
+</footer>
+
+</div>

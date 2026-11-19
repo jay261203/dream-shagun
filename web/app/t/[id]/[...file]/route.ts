@@ -4,7 +4,7 @@ import path from "node:path";
 import { CONTENT_TYPES, resolveTemplateFile } from "@/lib/templates/files";
 
 /** Serves a template's effects.js and assets/ files. Nothing else in the template folder is reachable. */
-export async function GET(_request: Request, ctx: { params: Promise<{ id: string; file: string[] }> }) {
+export async function GET(request: Request, ctx: { params: Promise<{ id: string; file: string[] }> }) {
   const { id, file } = await ctx.params;
   const full = resolveTemplateFile(id, file);
   if (!full) return new Response("Not found", { status: 404 });
@@ -20,7 +20,9 @@ export async function GET(_request: Request, ctx: { params: Promise<{ id: string
   return new Response(new Uint8Array(bytes), {
     headers: {
       "content-type": type,
-      "cache-control": "public, max-age=3600",
+      // effects.js is requested with ?v=<hash of its contents>, so a versioned URL can be kept for a year;
+      // other files (photos, music) are not versioned and are re-checked after an hour.
+      "cache-control": new URL(request.url).searchParams.has("v") ? "public, max-age=31536000, immutable" : "public, max-age=3600",
       "x-content-type-options": "nosniff",
       // An uploaded SVG must never run script if someone opens it directly.
       "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",

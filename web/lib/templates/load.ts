@@ -1,4 +1,5 @@
-import { readFile, access } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { LoadedTemplate } from "./types";
@@ -42,9 +43,11 @@ export async function loadTemplate(id: string, dir: string = templatesDir()): Pr
   ]);
   validateTemplateHtml(id, html);
   validateTemplateCss(id, css);
-  const hasEffects = await access(path.join(/*turbopackIgnore: true*/ root, "effects.js")).then(() => true, () => false);
+  const effects = await readFile(path.join(/*turbopackIgnore: true*/ root, "effects.js")).catch(() => null);
+  const hasEffects = effects !== null;
+  const effectsVersion = effects ? createHash("sha1").update(effects).digest("hex").slice(0, 10) : null;
 
-  const loaded: LoadedTemplate = { manifest, html, css, hasEffects };
+  const loaded: LoadedTemplate = { manifest, html, css, hasEffects, effectsVersion };
   if (process.env.NODE_ENV === "production") cache.set(key, loaded);
   return loaded;
 }

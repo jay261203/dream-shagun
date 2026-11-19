@@ -55,17 +55,26 @@
   var button = doc.querySelector("[data-music-button]");
   var audio = doc.querySelector("[data-music]");
   if (button && audio) {
+    var showPlaying = function (playing) {
+      button.setAttribute("aria-pressed", playing ? "true" : "false");
+      button.textContent = playing ? "Pause music" : "Tap to play music";
+    };
+    // The button follows the audio, whatever stopped it (the button, the phone's media controls, the end of the file).
+    audio.addEventListener("play", function () { showPlaying(true); });
+    audio.addEventListener("pause", function () { showPlaying(false); });
+
     button.addEventListener("click", function () {
       if (audio.paused) {
-        audio.play().then(function () {
-          button.setAttribute("aria-pressed", "true");
-          button.textContent = "Pause music";
-        }, function () { /* the browser said no; leave the button as it is */ });
+        audio.play().catch(function () { /* the browser said no; the button stays as it is */ });
       } else {
         audio.pause();
-        button.setAttribute("aria-pressed", "false");
-        button.textContent = "Tap to play music";
       }
     });
+
+    // Music never carries on in the background: switching tabs, locking the phone or leaving the page stops it.
+    // The guest taps again to resume, so it can never start by surprise.
+    var stopInBackground = function () { if (!audio.paused) audio.pause(); };
+    doc.addEventListener("visibilitychange", function () { if (doc.visibilityState === "hidden") stopInBackground(); });
+    window.addEventListener("pagehide", stopInBackground);
   }
 })();

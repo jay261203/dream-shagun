@@ -49,6 +49,13 @@ describe("templates in the repo", async () => {
     expect(html).toContain('data-section="cover"');
   });
 
+  it.each(ids)("%s links its script with a content version so updates are never stale", async (id) => {
+    const template = await loadTemplate(id);
+    const html = renderWedding(template, sample, { origin: "https://dreamshagun.example" });
+    if (template.hasEffects) expect(html).toContain(`/t/${id}/effects.js?v=${template.effectsVersion}"`);
+    if (template.hasEffects) expect(template.effectsVersion).toMatch(/^[0-9a-f]{10}$/);
+  });
+
   it.each(ids)("%s declares at least two colour presets and two font pairs", async (id) => {
     const { manifest } = await loadTemplate(id);
     expect(Object.keys(manifest.colorPresets).length).toBeGreaterThanOrEqual(2);

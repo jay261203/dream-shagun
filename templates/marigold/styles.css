@@ -64,14 +64,20 @@ a { color: var(--color-primary); }
 .cover.is-opening .cover__front { opacity: 0; pointer-events: none; transition: opacity .5s ease; }
 .cover.is-open .cover__door, .cover.is-open .cover__front { visibility: hidden; }
 
-/* Music button: always reachable, never starts by itself. */
+/* Music button: fixed to the screen so the guest can always stop it, and it never starts by itself.
+   A solid pill reads on the dark photograph and on the cream sections alike. */
 .music {
-  position: absolute; top: 14px; right: 14px; z-index: 3; min-height: 44px; padding: 0 18px;
-  border: 1.5px solid rgba(255, 255, 255, .9); border-radius: 999px; background: rgba(20, 8, 0, .35); color: #fff;
-  font: 600 14px var(--font-body); cursor: pointer;
+  position: fixed; top: 14px; right: 14px; z-index: 50; min-height: 44px; padding: 0 18px;
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--color-ink); border-radius: 999px; background: var(--color-surface); color: var(--color-ink);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .25); font: 700 14px var(--font-body); cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease;
 }
-.cover.is-open .music { border-color: var(--color-ink); background: var(--color-surface); color: var(--color-ink); }
-.music[aria-pressed="true"] { background: #fff; color: #231a14; }
+.music:hover { transform: translateY(-1px); }
+.music:active { transform: translateY(1px); }
+.music::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent currentColor; }
+.music[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.music[aria-pressed="true"]::before { width: 10px; height: 12px; border: 0; background: linear-gradient(90deg, currentColor 0 35%, transparent 35% 65%, currentColor 65% 100%); }
 
 /* Petals drift down the front of the cover. */
 .petal {
@@ -122,7 +128,7 @@ a { color: var(--color-primary); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .cover__door, .cover__front, .btn, .js-reveal [data-reveal] { transition: none; }
+  .cover__door, .cover__front, .btn, .music, .js-reveal [data-reveal] { transition: none; }
   .petal { display: none; }
   .js-reveal [data-reveal] { opacity: 1; transform: none; }
 }

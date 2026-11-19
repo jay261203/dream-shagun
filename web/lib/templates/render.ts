@@ -101,7 +101,7 @@ ${rewriteAssets(manifest.id, template.css)}</style>
 </head>
 <body data-wedding="${esc(data.slug)}" data-template="${esc(manifest.id)}">
 ${body}
-${template.hasEffects ? `<script src="/t/${esc(manifest.id)}/effects.js" defer></script>` : ""}
+${template.hasEffects ? `<script src="/t/${esc(manifest.id)}/effects.js?v=${esc(template.effectsVersion ?? "0")}" defer></script>` : ""}
 </body>
 </html>
 `;

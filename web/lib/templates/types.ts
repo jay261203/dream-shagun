@@ -30,6 +30,8 @@ export type LoadedTemplate = {
   html: string;
   css: string;
   hasEffects: boolean;
+  /** Short hash of effects.js, so a changed script gets a new URL and is never served from an old cache. */
+  effectsVersion: string | null;
 };
 
 export type WeddingEvent = {

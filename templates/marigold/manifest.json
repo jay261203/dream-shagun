@@ -4,6 +4,8 @@
   "tradition": ["hindu"],
   "style": "warm",
   "languages": ["en", "hi"],
+  "preview": "assets/marigold.jpg",
+  "credit": "Marigold photograph: Biswarup Ganguly, CC BY 3.0, via Wikimedia Commons",
   "sections": ["cover", "couple", "journey", "events", "rsvp", "blessing"],
   "alwaysOn": ["cover"],
   "colorPresets": {

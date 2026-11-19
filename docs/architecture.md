@@ -260,4 +260,4 @@ API error rate and latency on `/weddings/{slug}/rsvp` and `/blessings`, storage 
 
 ## 13. What is not built yet
 
-Auth (Google sign-in), the first template and the gallery, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.
+Auth (Google sign-in) and handing the "Try with your names" draft to the new wedding, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.

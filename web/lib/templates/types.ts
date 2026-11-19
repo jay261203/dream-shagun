@@ -22,6 +22,10 @@ export type Manifest = {
   defaults: { colorPreset: string; fontPair: string };
   music?: { src: string; licence: string };
   licence: string;
+  /** A picture under assets/ shown on the gallery card. */
+  preview?: string;
+  /** One line crediting a photograph or file the template uses, shown where its picture is shown. */
+  credit?: string;
 };
 
 export type LoadedTemplate = {

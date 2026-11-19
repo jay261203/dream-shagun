@@ -59,6 +59,10 @@ export function parseManifest(raw: unknown, expectedId: string): Manifest {
   if (!defaults?.colorPreset || !colorPresets[defaults.colorPreset]) fail(expectedId, "defaults.colorPreset must name a colour preset");
   if (!defaults?.fontPair || !fontPairs[defaults.fontPair]) fail(expectedId, "defaults.fontPair must name a font pair");
 
+  if (m.preview !== undefined && (typeof m.preview !== "string" || !/^assets\/[A-Za-z0-9][A-Za-z0-9._/-]*\.(jpg|jpeg|png|webp|avif)$/.test(m.preview) || m.preview.includes(".."))) {
+    fail(expectedId, "preview must be an image path under assets/");
+  }
+
   const music = m.music as { src?: unknown; licence?: unknown } | undefined;
 
   return {
@@ -74,6 +78,8 @@ export function parseManifest(raw: unknown, expectedId: string): Manifest {
     defaults: { colorPreset: defaults.colorPreset, fontPair: defaults.fontPair },
     music: music && typeof music.src === "string" && typeof music.licence === "string" ? { src: music.src, licence: music.licence } : undefined,
     licence: m.licence,
+    preview: typeof m.preview === "string" ? m.preview : undefined,
+    credit: typeof m.credit === "string" ? m.credit.slice(0, 200) : undefined,
   };
 }
 

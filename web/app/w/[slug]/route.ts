@@ -1,22 +1,9 @@
+import { guestPageCsp } from "@/lib/templates/csp";
 import { loadTemplate, TemplateNotFound } from "@/lib/templates/load";
 import { renderWedding } from "@/lib/templates/render";
 import { getPublishedWedding } from "@/lib/wedding";
 
 const DEFAULT_TEMPLATE = process.env.DEFAULT_TEMPLATE_ID ?? "marigold";
-
-// Page scripts only from our own origin; images and music over https; fonts from Google Fonts.
-const CSP = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src https://fonts.gstatic.com",
-  "img-src 'self' https: data:",
-  "media-src 'self' https:",
-  "connect-src 'self'",
-  "base-uri 'none'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-].join("; ");
 
 function notFound(): Response {
   return new Response("<!doctype html><title>Not found</title><p>We could not find this invitation.</p>", {
@@ -43,7 +30,7 @@ export async function GET(request: Request, ctx: { params: Promise<{ slug: strin
   return new Response(renderWedding(template, wedding, { origin }), {
     headers: {
       "content-type": "text/html; charset=utf-8",
-      "content-security-policy": CSP,
+      "content-security-policy": guestPageCsp("none"),
       "cache-control": "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
       "x-content-type-options": "nosniff",
     },

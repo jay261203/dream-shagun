@@ -222,7 +222,7 @@ Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4,
 
 - [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [x] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button. Marigold is in `templates/marigold/`; the countdown slot is filled later with the guest components. Still to check on a real Android phone and an iPhone
-- [ ] P1-T3 Template gallery with full live preview and "Try with your names" before login
+- [ ] P1-T3 Template gallery with full live preview and "Try with your names" before login. Built: gallery with filters (`/`), `/templates/[id]` with the live phone preview, `/preview/[id]`, the draft saved in the browser, a placeholder `/login`. Left: hand the draft to the new wedding after Google sign-in (P1-03)
 - [ ] P1-T4 Editor with phone-sized live preview: sections on or off, colour preset, font pair, music
 - [ ] P1-T5 Draft link and Publish step (free plan only for now; paid plans arrive in P3-06)
 

@@ -2,8 +2,10 @@ import time
 
 import jwt
 import pytest
+from cryptography.hazmat.primitives.asymmetric import ec
 from fastapi.testclient import TestClient
 
+from app.auth import get_jwks_client
 from app.config import Settings, get_settings
 from app.main import app
 
@@ -19,6 +21,33 @@ def client():
     )
     yield TestClient(app)
     app.dependency_overrides.clear()
+
+
+class FakeSigningKey:
+    def __init__(self, key):
+        self.key = key
+
+
+class FakeJwks:
+    """Stands in for the Supabase JWKS address: hands back one known public key."""
+
+    def __init__(self, public_key):
+        self.public_key = public_key
+
+    def get_signing_key_from_jwt(self, _token):
+        return FakeSigningKey(self.public_key)
+
+
+@pytest.fixture
+def ec_key():
+    return ec.generate_private_key(ec.SECP256R1())
+
+
+@pytest.fixture
+def jwks(client, ec_key):
+    app.dependency_overrides[get_jwks_client] = lambda: FakeJwks(ec_key.public_key())
+    yield
+    app.dependency_overrides.pop(get_jwks_client, None)
 
 
 @pytest.fixture

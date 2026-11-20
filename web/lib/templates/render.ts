@@ -92,11 +92,12 @@ export function renderWedding(template: LoadedTemplate, data: WeddingData, optio
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="${esc(preset.vars["--color-primary"] ?? "#ffffff")}">
 <link rel="canonical" href="${esc(url)}">
 ${shareTags(title, description, url, image)}
 ${fontLinks}
-<style>:root{${cssVars(preset.vars)}${cssVars(pair.vars)}}
+<style>:root{color-scheme:light;${cssVars(preset.vars)}${cssVars(pair.vars)}}
 ${rewriteAssets(manifest.id, template.css)}</style>
 </head>
 <body data-wedding="${esc(data.slug)}" data-template="${esc(manifest.id)}">

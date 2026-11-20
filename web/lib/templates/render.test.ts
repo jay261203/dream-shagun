@@ -142,6 +142,12 @@ describe("renderWedding", () => {
     expect(html).toContain('data-slot="countdown" data-target="2027-02-13T13:30:00.000Z"');
   });
 
+  it("declares itself light-only so a dark-mode browser cannot restyle it", async () => {
+    const html = await render(wedding());
+    expect(html).toContain('<meta name="color-scheme" content="light">');
+    expect(html).toContain(":root{color-scheme:light;");
+  });
+
   it("falls back to English for a bad language code", async () => {
     expect(await render(wedding({ languages: ['en"><x'] }))).toContain('<html lang="en">');
     expect(await render(wedding({ languages: ["gu"] }))).toContain('<html lang="gu">');

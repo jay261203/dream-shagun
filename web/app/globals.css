@@ -13,6 +13,10 @@
   --font-sans: var(--font-figtree), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+html {
+  color-scheme: light;
+}
+
 body {
   font-family: var(--font-sans);
 }

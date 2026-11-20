@@ -85,3 +85,14 @@ def test_asymmetric_token_is_refused_when_no_supabase_address_is_configured(clie
 
 def test_shared_secret_tokens_still_work_alongside(client, jwks, make_token):
     assert client.get("/me", headers=auth(make_token(sub="local-user"))).status_code == 200
+
+
+def test_a_token_from_another_project_is_refused_and_the_reason_is_logged(client, jwks, caplog):
+    """The real-world mix-up: the web app signs in at one Supabase, the API is pointed at another."""
+    import logging
+
+    other_project_key = ec.generate_private_key(ec.SECP256R1())
+    with caplog.at_level(logging.WARNING, logger="dream_shagun"):
+        assert client.get("/me", headers=auth(es256(other_project_key))).status_code == 401
+    assert any("Login token rejected" in r.getMessage() and "localhost" in r.getMessage() for r in caplog.records)
+    assert not any("eyJ" in r.getMessage() for r in caplog.records), "the token itself must never be logged"

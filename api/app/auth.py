@@ -13,6 +13,7 @@ import logging
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Annotated
+from urllib.parse import urlparse
 
 import jwt
 from fastapi import Depends, HTTPException, status
@@ -33,6 +34,10 @@ class CurrentUser:
     id: str
     email: str | None
     phone: str | None
+
+
+def _host(url: str) -> str:
+    return urlparse(url).hostname or "(not set)"
 
 
 @lru_cache
@@ -86,9 +91,12 @@ def get_current_user(
         raise
     except jwt.PyJWKClientConnectionError:
         # Supabase could not be reached for its keys. The caller sees a plain 401; we log the real reason.
-        logger.warning("Could not fetch Supabase signing keys")
+        logger.warning("Login token not checked: could not fetch the signing keys from %s", settings.supabase_url)
         raise unauthorized from None
-    except jwt.PyJWTError:
+    except jwt.PyJWTError as exc:
+        # The caller only ever sees 401. The reason (never the token) goes to the log, because a token signed by a
+        # different Supabase project than SUPABASE_URL points at is the usual cause and is otherwise invisible.
+        logger.warning("Login token rejected (%s): %s. SUPABASE_URL host is %s", type(exc).__name__, exc, _host(settings.supabase_url))
         raise unauthorized from None
 
     return CurrentUser(id=claims["sub"], email=claims.get("email"), phone=claims.get("phone"))

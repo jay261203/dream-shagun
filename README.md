@@ -29,7 +29,7 @@ pytest
 ## Try it on your phone
 
 1. `npx supabase start` (needs Docker Desktop). `npx supabase db reset` loads a sample wedding.
-2. `cd web && npm run dev`. In dev, `web/.env.development.local` points the app at this local Supabase, not the hosted project (delete that file to use hosted).
+2. `cd web && npm run dev`. In dev, `web/.env.development.local` points the app at this local Supabase, not the hosted project (delete that file to use hosted). Start the API too (`cd api && uvicorn app.main:app --reload`): `api/.env.local` points it at the same local Supabase. **The web app and the API must use the same Supabase**, or the API refuses every login (401).
 3. Put the phone on the same Wi-Fi and open `http://<this computer's address>:3000/w/sample-marigold`. Find the address with `ipconfig` (IPv4 Address).
 4. If the dev server blocks the address, add it to `ALLOWED_DEV_ORIGINS` (comma separated) and restart. Home network ranges are already allowed.
 

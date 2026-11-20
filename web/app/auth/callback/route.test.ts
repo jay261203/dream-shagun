@@ -53,6 +53,20 @@ describe("GET /auth/callback", () => {
     expect(location(res).searchParams.get("error")).toBe("google");
   });
 
+  it("gives up and says so when Supabase never answers, instead of leaving the person waiting", async () => {
+    vi.useFakeTimers();
+    try {
+      exchangeCodeForSession.mockReturnValue(new Promise(() => {}));
+      const pending = callback("?code=abc&next=/dashboard");
+      await vi.advanceTimersByTimeAsync(10_000);
+      const res = await pending;
+      expect(location(res).pathname).toBe("/login");
+      expect(location(res).searchParams.get("error")).toBe("google");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("uses the configured public address when there is one", async () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://dreamshagun.example";
     expect(location(await callback("?code=abc")).origin).toBe("https://dreamshagun.example");

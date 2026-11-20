@@ -43,3 +43,12 @@ export function saveDraft(draft: Draft): boolean {
     return false;
   }
 }
+
+/** Called once the wedding is created, so the next visitor on this computer starts fresh. */
+export function clearDraft(): void {
+  try {
+    window.localStorage.removeItem(KEY);
+  } catch {
+    // nothing to clear if storage is blocked
+  }
+}

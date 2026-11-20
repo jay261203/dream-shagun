@@ -1,6 +1,6 @@
 -- P1-03 (DS-12): create_wedding makes the wedding and its owner together, and only the API can call it.
 begin;
-select plan(9);
+select plan(11);
 
 insert into auth.users (id, instance_id, aud, role, email) values
   ('00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'owner@example.test');
@@ -18,6 +18,14 @@ select is((select status from public.weddings where slug = 'diya-and-aarav'), 'd
   'new wedding starts as a draft');
 select is((select wedding_date from public.weddings where slug = 'diya-and-aarav'), '2027-02-14'::date,
   'wedding date is saved');
+
+select lives_ok(
+  $$select public.create_wedding(
+      '00000000-0000-0000-0000-0000000000c1', 'owner@example.test', 'groom',
+      'Riya', 'Karan', 'colour-test-wedding', null, null, null, 'marigold', 'rose')$$,
+  'a template and colour can be chosen at creation');
+select is((select template_id || '/' || color_preset from public.weddings where slug = 'colour-test-wedding'), 'marigold/rose',
+  'the chosen template and colour are saved');
 select is(
   (select role || '/' || side || '/' || email from public.family_members fm
      join public.weddings w on w.id = fm.wedding_id where w.slug = 'diya-and-aarav'),

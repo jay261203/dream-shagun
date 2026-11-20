@@ -37,7 +37,7 @@ Three ideas shape everything:
 | Web app | Next.js 16 (App Router), React 19, TypeScript, Tailwind 4 | Server rendering gives fast first paint and correct WhatsApp link previews; one codebase for guest page and dashboard | scaffolded |
 | API | FastAPI on Python 3.12 | Small, typed, easy to test; keeps business rules (UPI, ledger, rate limits) in one place outside the UI | health route + `upi.py` built |
 | Database | Supabase Postgres | Real relational data with row-level security; free tier is enough for the first weddings | built and tested (16 row-level security checks) |
-| Auth | Supabase Auth with Google sign-in (phone OTP later) | Family members only; no SMS provider needed to start, and the API only checks a Supabase token either way | planned (DS-12) |
+| Auth | Supabase Auth with Google sign-in (phone OTP later) | Family members only; no SMS provider needed to start, and the API only checks a Supabase token either way | built; needs your Google credentials, see docs/google-login.md |
 | File storage | Supabase Storage | Photos and covers; limit is 1 GB on the free tier, so revisit before the album (P2-07) | planned |
 | Templates | Plain HTML and CSS rendered with Handlebars | New invitation looks without touching product code; Handlebars escapes values so names cannot inject HTML | renderer built and tested (DS-13); first template is DS-14 |
 | Payment | `upi://pay` deep link plus a QR code, no gateway | No payment licence, no money held, nothing to reconcile with a bank | link builder built |
@@ -109,6 +109,20 @@ Gallery ─► live preview ─► "Try with your names" (no login)
         ─► editor (events, journey, sections, theme) ─► draft link for family check
         ─► Publish ─► live link + WhatsApp message + QR code
 ```
+
+### Family signs in and creates a wedding
+
+```
+/login  "Continue with Google" ---> Supabase ---> Google ---> Supabase ---> /auth/callback
+        (code swapped for a session, kept in cookies; proxy.ts refreshes it before it expires)
+/create  reads the saved draft (names, date, colour) ---> checks the link name ---> POST /api/weddings
+        web server adds the login token ---> FastAPI checks the token ---> create_wedding(): wedding + owner, in one step
+/dashboard  lists the weddings this person belongs to (row-level security does the filtering)
+```
+
+- The browser only talks to the web app. The two `/api/weddings` routes pass requests to FastAPI on the server, so there is no cross-site setup and the token never reaches page scripts.
+- FastAPI accepts a token signed with a shared secret (HS256) or with the project's key pair (ES256 or RS256, public keys fetched from the project's JWKS address). It decides which algorithm to accept; the token cannot.
+- Guest pages (`/w`, `/t`, `/preview`) never touch any of this.
 
 ### Guest opens the link
 
@@ -260,4 +274,4 @@ API error rate and latency on `/weddings/{slug}/rsvp` and `/blessings`, storage 
 
 ## 13. What is not built yet
 
-Auth (Google sign-in) and handing the "Try with your names" draft to the new wedding, the editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.
+The editor, the API routes in PROJECT.md section 8, photo storage, and deployment. Each is a task in PROJECT.md and a ticket in Jira (space DS). Phase 4 (budget, vendors, checklist) is designed only at the level of `docs/wedding-timeline.md`.

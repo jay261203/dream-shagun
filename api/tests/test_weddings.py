@@ -42,6 +42,21 @@ def test_create_wedding_makes_caller_the_owner(client, db, make_token):
     assert params["p_side"] == "bride"
     assert params["p_bride_name"] == "Diya"  # trimmed
     assert params["p_wedding_date"] == "2027-02-14"
+    assert params["p_color_preset"] is None
+
+
+def test_create_keeps_the_template_and_colour_the_visitor_picked(client, db, make_token):
+    body = {**BODY, "template_id": "marigold", "color_preset": "rose"}
+    assert client.post("/weddings", json=body, headers=auth(make_token())).status_code == 201
+    _, params = db.rpc_calls[0]
+    assert (params["p_template_id"], params["p_color_preset"]) == ("marigold", "rose")
+
+
+@pytest.mark.parametrize("colour", ["Rose", "rose; drop table", "<b>", "x" * 41])
+def test_a_bad_colour_name_is_rejected(client, db, make_token, colour):
+    response = client.post("/weddings", json={**BODY, "color_preset": colour}, headers=auth(make_token()))
+    assert response.status_code == 422
+    assert db.rpc_calls == []
 
 
 def test_taken_slug_returns_409_with_suggestions(client, db, make_token):

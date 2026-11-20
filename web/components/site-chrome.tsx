@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
+
+import { currentClaims } from "@/lib/supabase/server";
 
 export function SiteHeader() {
   return (
@@ -10,12 +13,32 @@ export function SiteHeader() {
         <Link href="/#how" className="inline-flex min-h-11 items-center rounded-full px-3.5 hover:bg-surface">
           How it works
         </Link>
-        <Link href="/login" className="inline-flex min-h-11 items-center rounded-full border border-line px-[18px] hover:bg-surface">
-          Sign in
-        </Link>
+        <Suspense fallback={<AccountLink signedIn={false} />}>
+          <AccountLinkLoader />
+        </Suspense>
       </nav>
     </header>
   );
+}
+
+const pill = "inline-flex min-h-11 items-center rounded-full border border-line px-[18px] hover:bg-surface";
+
+function AccountLink({ signedIn }: { signedIn: boolean }) {
+  return signedIn ? (
+    <Link href="/dashboard" className={pill}>
+      Your weddings
+    </Link>
+  ) : (
+    <Link href="/login" className={pill}>
+      Sign in
+    </Link>
+  );
+}
+
+/** Reads the login cookie, so it sits inside a Suspense boundary and the rest of the header can be built ahead of time. */
+async function AccountLinkLoader() {
+  const claims = await currentClaims().catch(() => null);
+  return <AccountLink signedIn={claims !== null} />;
 }
 
 export function SiteFooter({ credits = [] }: { credits?: string[] }) {

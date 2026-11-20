@@ -222,7 +222,7 @@ Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4,
 
 - [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [x] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button. Marigold is in `templates/marigold/`; the countdown slot is filled later with the guest components. Still to check on a real Android phone and an iPhone
-- [ ] P1-T3 Template gallery with full live preview and "Try with your names" before login. Built: gallery with filters (`/`), `/templates/[id]` with the live phone preview, `/preview/[id]`, the draft saved in the browser, a placeholder `/login`. Left: hand the draft to the new wedding after Google sign-in (P1-03)
+- [x] P1-T3 Template gallery with full live preview and "Try with your names" before login. Gallery with filters (`/`), `/templates/[id]` with the live phone preview, `/preview/[id]`, the draft saved in the browser and handed to the new wedding by `/create`
 - [ ] P1-T4 Editor with phone-sized live preview: sections on or off, colour preset, font pair, music
 - [ ] P1-T5 Draft link and Publish step (free plan only for now; paid plans arrive in P3-06)
 
@@ -230,7 +230,7 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 
 - [x] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [x] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
-- [ ] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Backend done: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()` function. Left: Google sign-in and the form screens (after the design review)
+- [ ] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Built: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()`; `/login` (Google button), `/auth/callback`, `/create` (draft carried over, link-name check, side), `/dashboard`, sign-out; tokens verified with HS256 or the project's JWKS. Left: your Google credentials (`docs/google-login.md`) and a real Google login on a computer and phones
 - [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
 - [ ] P1-05 Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
 - [ ] P1-05a "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page

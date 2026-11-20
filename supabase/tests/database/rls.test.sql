@@ -2,6 +2,9 @@
 begin;
 select plan(16);
 
+-- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
+-- database cannot change the result.
+
 -- ---- fixtures (inserted as the postgres superuser, which bypasses RLS)
 insert into auth.users (id, instance_id, aud, role, email) values
   ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'family-a@example.test'),
@@ -38,9 +41,9 @@ select throws_ok('select * from public.guests', '42501', null,
   'anon has no privilege on guests');
 select throws_ok('select * from public.rsvps', '42501', null,
   'anon has no privilege on rsvps');
-select is((select count(*) from public.weddings)::int, 1,
+select is((select count(*) from public.weddings where id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 1,
   'anon sees only the published wedding');
-select is((select count(*) from public.events)::int, 1,
+select is((select count(*) from public.events where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 1,
   'anon sees events of the published wedding only');
 select throws_ok('select bride_side_upi from public.weddings', '42501', null,
   'anon cannot read UPI IDs from weddings');
@@ -55,26 +58,26 @@ set local role authenticated;
 select set_config('request.jwt.claims',
   '{"sub":"00000000-0000-0000-0000-0000000000a1","role":"authenticated"}', true);
 
-select is((select count(*) from public.blessings)::int, 1,
+select is((select count(*) from public.blessings where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 1,
   'family A reads its own blessings');
-select is((select count(*) from public.guests)::int, 1,
+select is((select count(*) from public.guests where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 1,
   'family A reads its own guests');
-select is((select count(*) from public.rsvps)::int, 1,
+select is((select count(*) from public.rsvps where guest_id = '30000000-0000-0000-0000-00000000000a')::int, 1,
   'family A reads its own rsvps');
-select is((select count(*) from public.weddings)::int, 1,
+select is((select count(*) from public.weddings where id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 1,
   'family A sees wedding A only (wedding B is a draft of someone else)');
-select is((select bride_side_upi from public.weddings), 'diya@upi',
+select is((select bride_side_upi from public.weddings where id = '10000000-0000-0000-0000-00000000000a'), 'diya@upi',
   'family A can read its own UPI ID');
 
 -- ---- family member of wedding B must not see wedding A's money or guests
 select set_config('request.jwt.claims',
   '{"sub":"00000000-0000-0000-0000-0000000000b1","role":"authenticated"}', true);
 
-select is((select count(*) from public.blessings)::int, 0,
+select is((select count(*) from public.blessings where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 0,
   'family B cannot read wedding A blessings');
-select is((select count(*) from public.guests)::int, 0,
+select is((select count(*) from public.guests where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 0,
   'family B cannot read wedding A guests');
-select is((select count(*) from public.events)::int, 2,
+select is((select count(*) from public.events where wedding_id in ('10000000-0000-0000-0000-00000000000a','10000000-0000-0000-0000-00000000000b'))::int, 2,
   'family B sees the published wedding A event and its own draft event');
 
 reset role;

@@ -61,6 +61,7 @@ def create_wedding(
                 "p_story": body.story,
                 "p_cover_photo_url": body.cover_photo_url,
                 "p_template_id": body.template_id,
+                "p_color_preset": body.color_preset,
             },
         ).execute()
     except APIError as exc:

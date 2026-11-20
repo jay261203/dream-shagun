@@ -20,6 +20,7 @@ class CreateWedding(BaseModel):
     story: str | None = Field(default=None, max_length=5000)
     cover_photo_url: str | None = Field(default=None, max_length=2000)
     template_id: str | None = Field(default=None, max_length=80)
+    color_preset: str | None = Field(default=None, max_length=40, pattern=r"^[a-z0-9-]+$")
 
     @field_validator("bride_name", "groom_name")
     @classmethod

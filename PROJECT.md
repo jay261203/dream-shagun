@@ -230,7 +230,7 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 
 - [x] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [x] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
-- [ ] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Built: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()`; `/login` (Google button), `/auth/callback`, `/create` (draft carried over, link-name check, side), `/dashboard`, sign-out; tokens verified with HS256 or the project's JWKS. Left: your Google credentials (`docs/google-login.md`) and a real Google login on a computer and phones
+- [x] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Built: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()`; `/login` (Google button), `/auth/callback`, `/create` (draft carried over, link-name check, side), `/dashboard`, sign-out; tokens verified with HS256 or the project's JWKS. Checked with a real Google login on a computer. Not yet checked on phones (needs the hosted Supabase, see `docs/google-login.md`)
 - [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
 - [ ] P1-05 Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
 - [ ] P1-05a "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page

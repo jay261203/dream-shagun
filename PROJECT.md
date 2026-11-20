@@ -218,22 +218,22 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 
 ## 10. Phase 1: invitation and blessing (weeks 2 to 5, four sprints)
 
-Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
+Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. (Sprint 2 and its five tickets are set up in Jira, Sprints 3 and 4 exist with their goals.) Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
 
 - [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [x] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button. Marigold is in `templates/marigold/`; the countdown slot is filled later with the guest components. Still to check on a real Android phone and an iPhone
 - [x] P1-T3 Template gallery with full live preview and "Try with your names" before login. Gallery with filters (`/`), `/templates/[id]` with the live phone preview, `/preview/[id]`, the draft saved in the browser and handed to the new wedding by `/create`
-- [ ] P1-T4 Editor with phone-sized live preview: sections on or off, colour preset, font pair, music
-- [ ] P1-T5 Draft link and Publish step (free plan only for now; paid plans arrive in P3-06)
+- [ ] P1-T4 (DS-19) Editor with phone-sized live preview: sections on or off, colour preset, font pair, music
+- [ ] P1-T5 (DS-20) Draft link and Publish step (free plan only for now; paid plans arrive in P3-06)
 
 Test: one real wedding uses it and at least 10 guests send a blessing through it.
 
 - [x] P1-01 Migrations for `weddings`, `family_members`, `events`, `guests`, `rsvps`, `wishes`, `blessings` with row-level security
 - [x] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
 - [x] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Built: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()`; `/login` (Google button), `/auth/callback`, `/create` (draft carried over, link-name check, side), `/dashboard`, sign-out; tokens verified with HS256 or the project's JWKS. Checked with a real Google login on a computer. Not yet checked on phones (needs the hosted Supabase, see `docs/google-login.md`)
-- [ ] P1-04 Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
-- [ ] P1-05 Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
-- [ ] P1-05a "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page
+- [ ] P1-04 (DS-16) Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`)
+- [ ] P1-05 (DS-17) Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title
+- [ ] P1-05a (DS-18) "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page
 - [ ] P1-06 RSVP per event with party size, food choice and allergies; optional RSVP deadline; add-to-calendar link on events
 - [ ] P1-07 Wishes editor and UPI IDs for both sides
 - [ ] P1-08 Blessing flow: choose side, wish, amount (₹501, ₹1,001, ₹2,100, ₹5,100, custom), name, note

@@ -101,13 +101,18 @@ async function Weddings({ searchParams }: { searchParams: SearchParams }) {
                 <span className="text-muted">Link: </span>
                 <span className="font-semibold">dreamshagun.example/w/{wedding.slug}</span>
               </p>
-              {wedding.status === "published" ? (
-                <Link href={`/w/${wedding.slug}`} className="inline-flex min-h-11 items-center self-start text-[15px] font-bold text-accent underline">
-                  View invitation
+              <div className="flex flex-wrap items-center gap-3">
+                <Link href={`/editor/${wedding.id}/events`} className="inline-flex min-h-11 items-center rounded-xl border border-ink px-5 text-[15px] font-bold hover:bg-surface">
+                  Edit invitation
                 </Link>
-              ) : (
-                <p className="text-sm text-muted">The editor, where you add events and publish, is the next task.</p>
-              )}
+                {wedding.status === "published" ? (
+                  <Link href={`/w/${wedding.slug}`} className="inline-flex min-h-11 items-center text-[15px] font-bold text-accent underline">
+                    View invitation
+                  </Link>
+                ) : (
+                  <span className="text-sm text-muted">Publishing comes in the next task.</span>
+                )}
+              </div>
             </li>
           ))}
         </ul>

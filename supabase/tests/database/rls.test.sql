@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(16);
+select plan(19);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -68,6 +68,17 @@ select is((select count(*) from public.weddings where id in ('10000000-0000-0000
   'family A sees wedding A only (wedding B is a draft of someone else)');
 select is((select bride_side_upi from public.weddings where id = '10000000-0000-0000-0000-00000000000a'), 'diya@upi',
   'family A can read its own UPI ID');
+
+-- Events are written through the API only (it checks who belongs to the wedding). A family member's own
+-- database login must not be able to write them, or the API's membership check could be bypassed.
+select throws_ok(
+  $$insert into public.events (wedding_id, name, starts_at)
+    values ('10000000-0000-0000-0000-00000000000a', 'Sneaky event', now())$$,
+  '42501', null, 'a family member cannot add an event straight to the database');
+select throws_ok($$update public.events set name = 'Changed' where wedding_id = '10000000-0000-0000-0000-00000000000a'$$,
+  '42501', null, 'a family member cannot change an event straight in the database');
+select throws_ok($$delete from public.events where wedding_id = '10000000-0000-0000-0000-00000000000a'$$,
+  '42501', null, 'a family member cannot delete an event straight from the database');
 
 -- ---- family member of wedding B must not see wedding A's money or guests
 select set_config('request.jwt.claims',

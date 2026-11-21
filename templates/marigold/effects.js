@@ -51,6 +51,29 @@
     items.forEach(function (el) { seen.observe(el); });
   }
 
+  // Countdown: days and hours to the first event, counting down until it starts. Written as text, never as markup.
+  var slot = doc.querySelector('[data-slot="countdown"]');
+  var target = slot ? Date.parse(slot.getAttribute("data-target") || "") : NaN;
+  if (slot && !isNaN(target)) {
+    var line = doc.createElement("p");
+    line.className = "countdown";
+    slot.appendChild(line);
+    var plural = function (n, word) { return n + " " + word + (n === 1 ? "" : "s"); };
+    var tick = function () {
+      var left = target - Date.now();
+      if (left <= 0) {
+        line.textContent = "The celebrations have begun";
+        return false;
+      }
+      var hours = Math.floor(left / 3600000);
+      line.textContent = plural(Math.floor(hours / 24), "day") + ", " + plural(hours % 24, "hour") + " to go";
+      return true;
+    };
+    if (tick()) {
+      var timer = window.setInterval(function () { if (!tick()) window.clearInterval(timer); }, 60000);
+    }
+  }
+
   // Music: a button the guest taps. Never plays by itself.
   var button = doc.querySelector("[data-music-button]");
   var audio = doc.querySelector("[data-music]");

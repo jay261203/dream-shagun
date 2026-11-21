@@ -49,7 +49,7 @@ export async function getPublishedWedding(slug: string): Promise<WeddingData | n
   const id = encodeURIComponent(wedding.id);
   const [events, moments] = await Promise.all([
     rest<WeddingEvent[]>(
-      `events?wedding_id=eq.${id}&select=name,starts_at,venue_name,venue_address,map_url,sort_order,kind,dress_code,note&order=sort_order,starts_at`,
+      `events?wedding_id=eq.${id}&select=id,name,starts_at,venue_name,venue_address,map_url,sort_order,kind,dress_code,note&order=sort_order,starts_at`,
     ),
     rest<WeddingMoment[]>(`moments?wedding_id=eq.${id}&select=title,happened_on,caption,photo_url,sort_order&order=sort_order`),
   ]);

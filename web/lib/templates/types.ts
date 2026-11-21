@@ -39,6 +39,8 @@ export type LoadedTemplate = {
 };
 
 export type WeddingEvent = {
+  /** Present for saved events; sample events have none and so get no calendar link. */
+  id?: string;
   name: string;
   starts_at: string;
   venue_name: string | null;

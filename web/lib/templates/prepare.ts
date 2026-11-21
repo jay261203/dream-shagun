@@ -52,13 +52,16 @@ export function prepare(data: WeddingData) {
     .sort((a, b) => a.sort_order - b.sort_order || a.starts_at.localeCompare(b.starts_at))
     .map((e) => {
       const map_url = safeUrl(e.map_url);
-      return { ...e, ...instantParts(e.starts_at), map_url, has_map: map_url !== null };
+      const calendar_url = e.id ? `/w/${encodeURIComponent(data.slug)}/calendar/${encodeURIComponent(e.id)}` : null;
+      return { ...e, ...instantParts(e.starts_at), map_url, has_map: map_url !== null, calendar_url, has_calendar: calendar_url !== null };
     });
   const moments = [...data.moments]
     .sort((a, b) => a.sort_order - b.sort_order)
     .map((m) => ({ ...m, date_label: monthYear(m.happened_on), photo_url: safeUrl(m.photo_url) }));
 
-  const firstEvent = events.find((e) => e.iso);
+  // The countdown goes to the earliest event, whatever order the family put them in.
+  const dated = events.filter((e) => e.iso);
+  const firstEvent = dated.reduce<(typeof dated)[number] | undefined>((a, e) => (!a || (e.iso as string) < (a.iso as string) ? e : a), undefined);
   const title = `${data.bride_name} & ${data.groom_name}`;
   const date_long = longDate(data.wedding_date) ?? firstEvent?.date_long ?? null;
 

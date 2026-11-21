@@ -60,7 +60,10 @@
         {{#if venue_address}}<p class="event__muted">{{venue_address}}</p>{{/if}}
         {{#if dress_code}}<p class="event__muted">Dress code: {{dress_code}}</p>{{/if}}
         {{#if note}}<p class="event__muted">{{note}}</p>{{/if}}
-        {{#if has_map}}<a class="btn btn--line" href="{{map_url}}" rel="noopener">Get directions</a>{{/if}}
+        <div class="event__actions">
+          {{#if has_map}}<a class="btn btn--line" href="{{map_url}}" rel="noopener">Get directions</a>{{/if}}
+          {{#if has_calendar}}<a class="btn btn--line" href="{{calendar_url}}">Add to calendar</a>{{/if}}
+        </div>
       </article>
       {{/each}}
     </div>

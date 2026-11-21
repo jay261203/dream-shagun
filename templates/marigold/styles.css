@@ -109,6 +109,8 @@ a { color: var(--color-primary); }
 .event__when { font-weight: 600; }
 .event__where { font-size: 18px; }
 .event__muted { color: var(--color-muted); font-size: 15px; }
+.event__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.countdown { margin: 14px 0 0; font-weight: 700; font-size: 18px; color: var(--color-primary); }
 
 /* A section whose slot has no component yet stays out of sight rather than showing a bare heading. */
 .block--slot:has([data-slot]:empty) { display: none; }

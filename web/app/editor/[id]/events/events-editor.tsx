@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { notifyPreview } from "@/lib/preview-bus";
+
 import { MAX_EVENTS, emptyForm, formFromEvent, isInDateOrder, kindInfo, moveItem, parseApiErrors, sortedByDate, toPayload, whenLabel, type EventForm, type EventItem, type FormErrors } from "@/lib/events";
 
 import { EventFormFields } from "./event-form";
@@ -62,6 +64,7 @@ export function EventsEditor({ weddingId, weddingDate, initialEvents }: Props) {
     const saved = (await res.json()) as EventItem;
     setEvents((list) => (editing?.mode === "edit" ? list.map((e) => (e.id === saved.id ? saved : e)) : [...list, saved]));
     setNotice({ kind: "ok", text: editing?.mode === "edit" ? "Changes saved." : "Event added." });
+    notifyPreview();
     setEditing(null);
   }
 
@@ -75,6 +78,7 @@ export function EventsEditor({ weddingId, weddingDate, initialEvents }: Props) {
     if (!res.ok && res.status !== 404) return setNotice({ kind: "error", text: await explain(res), signIn: res.status === 401 });
     setEvents((list) => list.filter((e) => e.id !== id));
     setNotice({ kind: "ok", text: "Event deleted." });
+    notifyPreview();
   }
 
   /** Show the new order straight away; put it back if the server says no. */
@@ -89,6 +93,7 @@ export function EventsEditor({ weddingId, weddingDate, initialEvents }: Props) {
       return setNotice({ kind: "error", text: await explain(res), signIn: res.status === 401 });
     }
     setEvents((await res.json()) as EventItem[]);
+    notifyPreview();
   }
 
   const startAdd = () => {

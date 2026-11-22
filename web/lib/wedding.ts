@@ -15,6 +15,7 @@ const WEDDING_COLUMNS = [
   "color_preset",
   "font_pair",
   "music_url",
+  "music_enabled",
   "sections_enabled",
   "languages",
   "blessings_enabled",
@@ -57,4 +58,31 @@ export async function getPublishedWedding(slug: string): Promise<WeddingData | n
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _id, ...rest_ } = wedding;
   return { ...rest_, events, moments };
+}
+
+const FAMILY_COLUMNS = `${WEDDING_COLUMNS},status`;
+
+type SupabaseLike = {
+  from: (table: string) => {
+    select: (columns: string) => { eq: (column: string, value: string) => { order: (c: string, o: { ascending: boolean }) => unknown } & PromiseLike<{ data: unknown[] | null }> };
+  };
+};
+
+/**
+ * The family's own wedding as the guest page would show it, drafts included, for the live preview.
+ * Reads with the signed-in person's login, so row-level security decides: anyone who is not in the family gets null.
+ * Events carry no id here so the preview shows no calendar links (the public calendar address 404s for a draft).
+ */
+export async function getWeddingForFamily(supabase: unknown, id: string): Promise<WeddingData | null> {
+  const db = supabase as SupabaseLike;
+  const { data: rows } = await db.from("weddings").select(FAMILY_COLUMNS).eq("id", id);
+  const wedding = (rows?.[0] ?? null) as (WeddingRow & { status?: string }) | null;
+  if (!wedding) return null;
+  const [{ data: events }, { data: moments }] = await Promise.all([
+    db.from("events").select("name,starts_at,venue_name,venue_address,map_url,sort_order,kind,dress_code,note").eq("wedding_id", id) as PromiseLike<{ data: WeddingEvent[] | null }>,
+    db.from("moments").select("title,happened_on,caption,photo_url,sort_order").eq("wedding_id", id) as PromiseLike<{ data: WeddingMoment[] | null }>,
+  ]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: _id, status: _status, ...rest_ } = wedding;
+  return { ...rest_, events: events ?? [], moments: moments ?? [] };
 }

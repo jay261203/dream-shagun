@@ -79,3 +79,16 @@ describe("templates in the repo", async () => {
     expect(hiddenByDefault).toBe(false);
   });
 });
+
+describe("the music switch", () => {
+  it("plays the template's tune by default and not at all when the family turns it off", async () => {
+    const template = await loadTemplate("marigold");
+    const render = (extra: Partial<WeddingData>) => renderWedding(template, { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+    expect(render({})).toContain("data-music-button");
+    expect(render({ music_enabled: true })).toContain("data-music-button");
+    const off = render({ music_enabled: false });
+    expect(off).not.toContain("data-music-button");
+    expect(off).not.toContain("<audio");
+    expect(off).not.toContain("Music: L Ramakrishnan");
+  });
+});

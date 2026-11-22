@@ -37,7 +37,7 @@ export function isSameOrigin(request: Request): boolean {
  * so there is no cross-site setup to get wrong and the login token never reaches page scripts.
  * The API checks the token itself; we only refuse early when nobody is signed in.
  */
-export async function forwardToApi(path: string, init: { method: "GET" | "POST" | "PUT" | "DELETE"; body?: string | ArrayBuffer; contentType?: string }): Promise<Response> {
+export async function forwardToApi(path: string, init: { method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"; body?: string | ArrayBuffer; contentType?: string }): Promise<Response> {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) return json({ detail: "Login required" }, 401);

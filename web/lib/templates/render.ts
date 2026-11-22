@@ -51,8 +51,9 @@ export function renderWedding(template: LoadedTemplate, data: WeddingData, optio
   const { manifest } = template;
   const base = prepare(data);
   // Music: the wedding's own file if it has one, else the template's default (a file under its assets/ folder).
-  const defaultMusic = base.music_url === null ? (manifest.music?.src ?? null) : null;
-  const view = { ...base, music_url: base.music_url ?? defaultMusic, music_is_default: defaultMusic !== null };
+  const musicOn = data.music_enabled !== false;
+  const defaultMusic = musicOn && base.music_url === null ? (manifest.music?.src ?? null) : null;
+  const view = { ...base, music_url: musicOn ? (base.music_url ?? defaultMusic) : null, music_is_default: defaultMusic !== null };
 
   // 1. Fill placeholders. Handlebars escapes every {{value}}; templates may not use raw output (checked at load).
   const filled = Handlebars.create().compile(template.html)(view);

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { notifyPreview } from "@/lib/preview-bus";
+
 import { moveItem } from "@/lib/events";
 import {
   MAX_MOMENTS,
@@ -183,6 +185,7 @@ export function JourneyEditor({ weddingId, initialMoments }: Props) {
     const saved = (await res.json()) as MomentItem;
     setMoments((list) => (edit ? list.map((m) => (m.id === saved.id ? saved : m)) : [...list, saved]));
     setNotice({ kind: "ok", text: edit ? "Changes saved." : "Moment added." });
+    notifyPreview();
     setEditing(null);
   }
 
@@ -196,6 +199,7 @@ export function JourneyEditor({ weddingId, initialMoments }: Props) {
     if (!res.ok && res.status !== 404) return setNotice({ kind: "error", text: await explain(res), signIn: res.status === 401 });
     setMoments((list) => list.filter((m) => m.id !== id));
     setNotice({ kind: "ok", text: "Moment deleted." });
+    notifyPreview();
   }
 
   async function reorder(next: MomentItem[]) {
@@ -209,6 +213,7 @@ export function JourneyEditor({ weddingId, initialMoments }: Props) {
       return setNotice({ kind: "error", text: await explain(res), signIn: res.status === 401 });
     }
     setMoments((await res.json()) as MomentItem[]);
+    notifyPreview();
   }
 
   const startAdd = (title = "") => {

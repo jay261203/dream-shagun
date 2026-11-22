@@ -1,15 +1,16 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { PreviewPane } from "@/components/preview-pane";
 import { SiteFooter } from "@/components/site-chrome";
 
 /** The sections of the editor, as in the design. A section with no `href` is not built yet and is shown but not linked. */
 const SECTIONS = [
-  { key: "story", label: "Couple and story", href: null },
+  { key: "story", label: "Couple and story", href: "story" },
   { key: "journey", label: "Our journey", href: "journey" },
   { key: "events", label: "Events", href: "events" },
-  { key: "sections", label: "Sections", href: null },
-  { key: "look", label: "Look and music", href: null },
+  { key: "sections", label: "Sections", href: "sections" },
+  { key: "look", label: "Look and music", href: "look" },
   { key: "wishes", label: "Wishes and UPI", href: null },
 ] as const;
 
@@ -41,7 +42,7 @@ export function EditorShell({ weddingId, names, status, active, children }: Prop
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-5 py-8 sm:px-10 lg:flex-row lg:gap-10">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col gap-6 px-5 py-8 sm:px-10 lg:flex-row lg:flex-wrap lg:gap-10 xl:flex-nowrap">
         <nav aria-label="Invitation sections" className="flex gap-1 overflow-x-auto lg:w-56 lg:shrink-0 lg:flex-col lg:overflow-visible">
           {SECTIONS.map((s) =>
             s.href ? (
@@ -61,7 +62,8 @@ export function EditorShell({ weddingId, names, status, active, children }: Prop
             ),
           )}
         </nav>
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="min-w-0 flex-1 lg:basis-0">{children}</main>
+        <PreviewPane weddingId={weddingId} />
       </div>
       <SiteFooter />
     </>

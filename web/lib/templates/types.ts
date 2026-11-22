@@ -71,6 +71,8 @@ export type WeddingData = {
   color_preset: string | null;
   font_pair: string | null;
   music_url: string | null;
+  /** False when the family turned the music off. Missing counts as on. */
+  music_enabled?: boolean;
   sections_enabled: string[];
   languages: string[];
   blessings_enabled: boolean;

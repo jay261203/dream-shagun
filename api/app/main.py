@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
-from app.routers import events, health, me, weddings
+from app.routers import events, health, me, moments, weddings
 
 logger = logging.getLogger("dream_shagun")
 
@@ -30,3 +30,4 @@ app.include_router(health.router)
 app.include_router(me.router)
 app.include_router(weddings.router)
 app.include_router(events.router)
+app.include_router(moments.router)

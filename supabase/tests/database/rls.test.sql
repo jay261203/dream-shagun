@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(19);
+select plan(21);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -98,6 +98,17 @@ select throws_ok(
   $$insert into public.blessings (wedding_id, giver_name, method, side, status)
     values ('10000000-0000-0000-0000-00000000000a', 'x', 'cash', 'bride', 'received')$$,
   '23514', null, 'status received without received_by/received_at is rejected');
+
+-- ---- photos: the bucket is public to read, JPEG only and size-capped; nobody but our API (service role) can write to it
+select results_eq(
+  $$select public, file_size_limit, allowed_mime_types from storage.buckets where id = 'wedding-photos'$$,
+  $$values (true, 2097152::bigint, array['image/jpeg']::text[])$$,
+  'the photo bucket is public to read, JPEG only and capped at 2 MB');
+set local role authenticated;
+select throws_ok(
+  $$insert into storage.objects (bucket_id, name) values ('wedding-photos', '10000000-0000-0000-0000-00000000000a/sneaky.jpg')$$,
+  '42501', null, 'a signed-in family member cannot put a photo straight into storage (API only)');
+reset role;
 
 select * from finish();
 rollback;

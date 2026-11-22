@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-chrome";
 /** The sections of the editor, as in the design. A section with no `href` is not built yet and is shown but not linked. */
 const SECTIONS = [
   { key: "story", label: "Couple and story", href: null },
-  { key: "journey", label: "Our journey", href: null },
+  { key: "journey", label: "Our journey", href: "journey" },
   { key: "events", label: "Events", href: "events" },
   { key: "sections", label: "Sections", href: null },
   { key: "look", label: "Look and music", href: null },

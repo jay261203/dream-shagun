@@ -68,9 +68,28 @@ class Query:
         return SimpleNamespace(data=out[: self._limit] if self._limit else out)
 
 
+class FakeBucket:
+    """Files by path. Records what was uploaded and removed."""
+
+    def __init__(self, files: dict[str, bytes]):
+        self.files = files
+
+    def upload(self, path, data, options=None):
+        self.files[path] = data
+
+    def remove(self, paths):
+        for path in paths:
+            self.files.pop(path, None)
+
+    def list(self, folder):
+        return [{"name": p.split("/", 1)[1]} for p in self.files if p.startswith(folder + "/")]
+
+
 class FakeDb:
     def __init__(self, **tables: list[dict]):
         self.tables = {name: list(rows) for name, rows in tables.items()}
+        self.files: dict[str, bytes] = {}
+        self.storage = SimpleNamespace(from_=lambda _bucket: FakeBucket(self.files))
 
     def table(self, name: str) -> Query:
         return Query(self.tables.setdefault(name, []), name)

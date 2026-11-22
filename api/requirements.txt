@@ -5,3 +5,4 @@ pydantic-settings>=2.6
 PyJWT[crypto]>=2.9
 supabase>=2.10
 pytest>=8.3
+pillow>=11

@@ -38,7 +38,7 @@ Three ideas shape everything:
 | API | FastAPI on Python 3.12 | Small, typed, easy to test; keeps business rules (UPI, ledger, rate limits) in one place outside the UI | health route + `upi.py` built |
 | Database | Supabase Postgres | Real relational data with row-level security; free tier is enough for the first weddings | built and tested (16 row-level security checks) |
 | Auth | Supabase Auth with Google sign-in (phone OTP later) | Family members only; no SMS provider needed to start, and the API only checks a Supabase token either way | built; needs your Google credentials, see docs/google-login.md |
-| File storage | Supabase Storage | Photos and covers; limit is 1 GB on the free tier, so revisit before the album (P2-07) | planned |
+| File storage | Supabase Storage, bucket `wedding-photos` | Photos and covers; limit is 1 GB on the free tier, so revisit before the album (P2-07). Public to read, written only by the API (service role) after a membership check. The API re-draws every upload as a JPEG of at most 1600 px, which also removes GPS and camera details; at most 40 photos per wedding | in use (journey photos) |
 | Templates | Plain HTML and CSS rendered with Handlebars | New invitation looks without touching product code; Handlebars escapes values so names cannot inject HTML | renderer built and tested (DS-13); first template is DS-14 |
 | Payment | `upi://pay` deep link plus a QR code, no gateway | No payment licence, no money held, nothing to reconcile with a bank | link builder built |
 | Containers | Docker, one image per service, docker-compose for local | Same runtime locally and in production for the API; any service can run alone | built and tested |

@@ -20,6 +20,22 @@ trademark registers (WIPO Global Brand Database, USPTO, India IPO) and a domain 
 | Hostwell | No hit | Open, needs a real check |
 | Togetha | No hit; close to "together" used by Evite and others | Open, weak |
 
+### Second round (names from a ChatGPT planning conversation, checked 24 Nov 2026)
+
+Same limits: a plain web search, not a trademark clearance.
+
+| Candidate | What the search found | Verdict |
+| --- | --- | --- |
+| Gatherbell | No hits for the name. The "Gather-" family is crowded (Gather, Gatherwell, GatherBoard, Gather.town) | Leading candidate: warm, easy to say, calls people together. Risk is search and trademark crowding around "Gather" |
+| Hostwell | No hits (also in round one) | Fallback: plain, a little dull |
+| Occanote | No hits; near Coconote, OktoNote, Ocean Notes | Drop: sounds like "ocean note" on a call, reads as a notes app |
+| Occafold | No hits | Drop: hard to say and spell |
+| Aavo ("come" in Gujarati) | No exact hit; "Ahvaan", an Indian invitation and event planner app, means nearly the same | Drop: too easy to confuse |
+| DearGather, Meetletter, Guestory, Daynote, KindlyCome, DearDate, Gatherpost, OpenEnvelope | Not searched | Weaker; not pursued |
+
+Before choosing: search the WIPO, USPTO and India trademark registers (software classes 9 and 42, event services 41) and
+check `.com`, `.in` and `.app`. Say the name aloud on a phone call and spell it back.
+
 A name should be short, plain, not wedding-specific, easy to say aloud on a phone call, and not end in "-ly" or "-ify".
 
 ## Voice

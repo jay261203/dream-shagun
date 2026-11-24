@@ -116,3 +116,27 @@ describe("the reply form hook-up", () => {
     expect(html).not.toContain('<script src="/guest/rsvp.js');
   });
 });
+
+describe("the blessing form hook-up", () => {
+  const render = async (extra: Partial<WeddingData>) =>
+    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+
+  it("loads the blessing script once and hands it only the link name, the host names and the preview flag", async () => {
+    const html = await render({ events: [{ ...sample.events[0], id: "e1" }] });
+    expect(html.match(/<script src="\/guest\/blessing\.js\?v=/g)).toHaveLength(1);
+    const config = /data-slot="blessing" data-config="([^"]*)"/.exec(html)?.[1] ?? "";
+    const parsed = JSON.parse(config.replace(/&quot;/g, '"').replace(/&amp;/g, "&"));
+    expect(parsed).toEqual({ slug: "diya-and-aarav", preview: false, hosts: { bride: "Diya", groom: "Aarav" } });
+  });
+  it("never puts a UPI ID or payee name in the page", async () => {
+    const html = await render({});
+    expect(html).not.toMatch(/upi|payee/i);
+  });
+  it("marks a preview (events without ids)", async () => {
+    expect(await render({})).toContain("&quot;preview&quot;:true");
+  });
+  it("leaves the script out when blessings are off or the section is switched off", async () => {
+    expect(await render({ blessings_enabled: false })).not.toContain('<script src="/guest/blessing.js');
+    expect(await render({ sections_enabled: ["cover", "events"] })).not.toContain('<script src="/guest/blessing.js');
+  });
+});

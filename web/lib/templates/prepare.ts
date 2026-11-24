@@ -73,6 +73,13 @@ export function prepare(data: WeddingData) {
     events: events.map((e) => ({ id: e.id ?? null, name: e.name, date: e.date_long })),
   });
 
+  // What the blessing form needs to start. Which sides take blessings is asked of the server, never read from here.
+  const blessing_config = JSON.stringify({
+    slug: data.slug,
+    preview: events.some((e) => !e.id),
+    hosts: { bride: data.bride_name, groom: data.groom_name },
+  });
+
   return {
     slug: data.slug,
     bride_name: data.bride_name,
@@ -86,6 +93,7 @@ export function prepare(data: WeddingData) {
     blessings_enabled: data.blessings_enabled,
     first_event_iso: firstEvent?.iso ?? null,
     rsvp_config,
+    blessing_config,
     events,
     moments,
     has_events: events.length > 0,

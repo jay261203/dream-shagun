@@ -2,15 +2,18 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-let cached: string | null = null;
+const cached = new Map<string, string>();
 
-/** Short hash of the guest reply script, so a changed script gets a new address and is never served from an old cache. */
-export function rsvpScriptVersion(): string {
-  if (cached !== null) return cached;
+/** Short hash of a guest script (rsvp, blessing), so a changed script gets a new address and is never served from an old cache. */
+export function guestScriptVersion(name: "rsvp" | "blessing"): string {
+  const known = cached.get(name);
+  if (known !== undefined) return known;
+  let version = "0";
   try {
-    cached = createHash("sha256").update(readFileSync(path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "guest", "rsvp.js"))).digest("hex").slice(0, 10);
+    version = createHash("sha256").update(readFileSync(path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "guest", `${name}.js`))).digest("hex").slice(0, 10);
   } catch {
-    cached = "0";
+    // A missing file gives version 0; the page still renders.
   }
-  return cached;
+  cached.set(name, version);
+  return version;
 }

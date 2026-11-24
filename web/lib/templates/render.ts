@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
 import { parse } from "node-html-parser";
 
-import { rsvpScriptVersion } from "@/lib/guest-script";
+import { guestScriptVersion } from "@/lib/guest-script";
 
 import { prepare, safeUrl } from "./prepare";
 import type { LoadedTemplate, WeddingData } from "./types";
@@ -106,7 +106,8 @@ ${rewriteAssets(manifest.id, template.css)}</style>
 <body data-wedding="${esc(data.slug)}" data-template="${esc(manifest.id)}">
 ${body}
 ${template.hasEffects ? `<script src="/t/${esc(manifest.id)}/effects.js?v=${esc(template.effectsVersion ?? "0")}" defer></script>` : ""}
-${body.includes('data-slot="rsvp"') ? `<script src="/guest/rsvp.js?v=${rsvpScriptVersion()}" defer></script>` : ""}
+${body.includes('data-slot="rsvp"') ? `<script src="/guest/rsvp.js?v=${guestScriptVersion("rsvp")}" defer></script>` : ""}
+${body.includes('data-slot="blessing"') ? `<script src="/guest/blessing.js?v=${guestScriptVersion("blessing")}" defer></script>` : ""}
 </body>
 </html>
 `;

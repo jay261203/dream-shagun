@@ -21,3 +21,5 @@ __pycache__/
 .DS_Store
 .vscode/
 .idea/
+# private notes (not pushed)
+CODE_GUIDE.local.md

@@ -70,7 +70,7 @@ export function prepare(data: WeddingData) {
     slug: data.slug,
     deadline: data.rsvp_deadline,
     deadline_label: longDate(data.rsvp_deadline),
-    events: events.map((e) => ({ id: e.id ?? null, label: [e.name, e.date_long].filter(Boolean).join(", ") })),
+    events: events.map((e) => ({ id: e.id ?? null, name: e.name, date: e.date_long })),
   });
 
   return {

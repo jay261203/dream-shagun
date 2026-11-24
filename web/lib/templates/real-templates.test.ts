@@ -104,7 +104,7 @@ describe("the reply form hook-up", () => {
     const parsed = JSON.parse(config.replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#x27;/g, "'"));
     expect(parsed.slug).toBe("diya-and-aarav");
     expect(parsed.deadline).toBe("2027-01-31");
-    expect(parsed.events).toEqual([{ id: "e1", label: 'Sangeet "night" <b>, 13 February 2027' }]);
+    expect(parsed.events).toEqual([{ id: "e1", name: 'Sangeet "night" <b>', date: "13 February 2027" }]);
     expect(html.match(/<script src="\/guest\/rsvp\.js\?v=/g)).toHaveLength(1);
   });
   it("marks events without an id (a preview) so the form shows but cannot send", async () => {

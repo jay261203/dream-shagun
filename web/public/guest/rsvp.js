@@ -5,6 +5,7 @@
 (function () {
   "use strict";
   var doc = document;
+  var SVG = "http://www.w3.org/2000/svg";
   var slot = doc.querySelector('[data-slot="rsvp"]');
   if (!slot) return;
 
@@ -17,11 +18,11 @@
 
   function remembered() { try { return window.localStorage.getItem(storeKey); } catch (e) { return null; } }
   function remember(code) { try { window.localStorage.setItem(storeKey, code); } catch (e) { /* private mode: the reply still saves */ } }
+  function forget() { try { window.localStorage.removeItem(storeKey); } catch (e) { /* ignore */ } }
 
   // Today's date in India, so "closed" matches what the server decides.
   function indiaToday() {
-    var parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-    return parts; // YYYY-MM-DD
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   }
   var closed = Boolean(cfg.deadline) && indiaToday() > cfg.deadline;
 
@@ -36,6 +37,23 @@
     return node;
   }
 
+  function icon(path, size) {
+    var svg = doc.createElementNS(SVG, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", String(size || 20));
+    svg.setAttribute("height", String(size || 20));
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2.4");
+    svg.setAttribute("stroke-linecap", "round");
+    svg.setAttribute("stroke-linejoin", "round");
+    svg.setAttribute("aria-hidden", "true");
+    var p = doc.createElementNS(SVG, "path");
+    p.setAttribute("d", path);
+    svg.appendChild(p);
+    return svg;
+  }
+
   var uid = 0;
   function field(labelText, input, hint) {
     var id = "rsvp-f" + (++uid);
@@ -43,40 +61,57 @@
     return el("div", { class: "rsvp__field" }, [el("label", { for: id, text: labelText }), input, hint ? el("small", { text: hint }) : null]);
   }
 
-  var RESPONSES = [["yes", "Coming"], ["maybe", "Maybe"], ["no", "Not coming"]];
+  var RESPONSES = [["yes", "Coming"], ["maybe", "Maybe"], ["no", "Can’t come"]];
   var FOODS = [["veg", "Vegetarian"], ["jain", "Jain"], ["other", "Other"]];
+  var MAX_PARTY = 20;
 
-  var name = el("input", { type: "text", maxlength: "80", autocomplete: "name", required: "required" });
+  var name = el("input", { type: "text", maxlength: "80", autocomplete: "name", required: "required", placeholder: "For example, Rohan Shah" });
   var phone = el("input", { type: "tel", maxlength: "20", autocomplete: "tel", inputmode: "tel" });
   var allergies = el("textarea", { maxlength: "300", rows: "2" });
   var status = el("p", { class: "rsvp__msg", role: "status", "aria-live": "polite" });
-  var submit = el("button", { type: "submit", class: "btn", text: "Send my reply" });
+  var submit = el("button", { type: "submit", class: "btn rsvp__send", text: "Send my reply" });
 
+  // One card per event: a three-way choice, and when someone is coming, how many of them.
   var rows = cfg.events.map(function (event, index) {
     var group = "rsvp-r" + index;
-    var party = el("select", { "aria-label": "How many people for " + event.label });
-    for (var n = 1; n <= 20; n++) party.appendChild(el("option", { value: String(n), text: n === 1 ? "1 person" : n + " people" }));
-    var partyBox = el("div", { class: "rsvp__party" }, [party]);
-    partyBox.hidden = true;
+    var count = 1;
+    var number = el("output", { class: "rsvp__count", text: "1" });
+    var minus = el("button", { type: "button", class: "rsvp__step", "aria-label": "One fewer person for " + event.name }, [icon("M5 12h14")]);
+    var plus = el("button", { type: "button", class: "rsvp__step", "aria-label": "One more person for " + event.name }, [icon("M12 5v14M5 12h14")]);
+    var party = el("div", { class: "rsvp__party" }, [el("span", { class: "rsvp__party-label", text: "How many of you?" }), el("div", { class: "rsvp__stepper" }, [minus, number, plus])]);
+    party.hidden = true;
+
+    function setCount(n) {
+      count = Math.max(1, Math.min(MAX_PARTY, n));
+      number.textContent = String(count);
+      minus.disabled = count <= 1;
+      plus.disabled = count >= MAX_PARTY;
+    }
+    minus.addEventListener("click", function () { setCount(count - 1); });
+    plus.addEventListener("click", function () { setCount(count + 1); });
+    setCount(1);
+
     var radios = RESPONSES.map(function (r) {
       var input = el("input", { type: "radio", name: group, value: r[0] });
-      input.addEventListener("change", function () { partyBox.hidden = r[0] === "no" || !input.checked; });
-      return { value: r[0], input: input, node: el("label", { class: "rsvp__choice" }, [input, el("span", { text: r[1] })]) };
+      input.addEventListener("change", function () { party.hidden = r[0] === "no"; });
+      return { value: r[0], input: input, node: el("label", { class: "rsvp__option" }, [input, el("span", { text: r[1] })]) };
     });
-    var fieldset = el("fieldset", { class: "rsvp__event" }, [el("legend", { text: event.label }), el("div", { class: "rsvp__choices" }, radios.map(function (r) { return r.node; })), partyBox]);
-    return { event: event, radios: radios, party: party, partyBox: partyBox, node: fieldset };
+
+    var head = el("div", { class: "rsvp__event-head" }, [el("span", { class: "rsvp__event-name", text: event.name }), event.date ? el("span", { class: "rsvp__event-date", text: event.date }) : null]);
+    var legend = el("legend", { class: "sr-only", text: "Will you come to " + event.name + "?" });
+    var fieldset = el("fieldset", { class: "rsvp__event" }, [legend, head, el("div", { class: "rsvp__segmented" }, radios.map(function (r) { return r.node; })), party]);
+    return { event: event, radios: radios, setCount: setCount, getCount: function () { return count; }, party: party, node: fieldset };
   });
 
   var foodRadios = FOODS.map(function (f) {
     var input = el("input", { type: "radio", name: "rsvp-food", value: f[0] });
-    return { value: f[0], input: input, node: el("label", { class: "rsvp__choice" }, [input, el("span", { text: f[1] })]) };
+    return { value: f[0], input: input, node: el("label", { class: "rsvp__chip" }, [input, el("span", { text: f[1] })]) };
   });
 
   var form = el("form", { class: "rsvp", novalidate: "novalidate" }, [
-    field("Your name", name),
-    field("Phone number (optional)", phone, "Only the family sees this."),
+    el("div", { class: "rsvp__who" }, [field("Your name", name), field("Phone number (optional)", phone, "Only the family sees this.")]),
     el("div", { class: "rsvp__events" }, rows.map(function (r) { return r.node; })),
-    el("fieldset", { class: "rsvp__event" }, [el("legend", { text: "Food for your group (optional)" }), el("div", { class: "rsvp__choices" }, foodRadios.map(function (f) { return f.node; }))]),
+    el("fieldset", { class: "rsvp__group" }, [el("legend", { text: "Food for your group (optional)" }), el("div", { class: "rsvp__chips" }, foodRadios.map(function (f) { return f.node; }))]),
     field("Any allergies? (optional)", allergies),
     status,
     submit,
@@ -96,8 +131,8 @@
     rows.forEach(function (row) {
       var mine = (saved.replies || []).filter(function (r) { return r.event_id === row.event.id; })[0];
       row.radios.forEach(function (r) { r.input.checked = Boolean(mine) && r.value === mine.response; });
-      row.partyBox.hidden = !mine || mine.response === "no";
-      if (mine && mine.party_size > 0) row.party.value = String(mine.party_size);
+      row.party.hidden = !mine || mine.response === "no";
+      row.setCount(mine && mine.party_size > 0 ? mine.party_size : 1);
     });
   }
 
@@ -105,7 +140,7 @@
     var replies = [];
     rows.forEach(function (row) {
       var chosen = row.radios.filter(function (r) { return r.input.checked; })[0];
-      if (chosen) replies.push({ event_id: row.event.id, response: chosen.value, party_size: chosen.value === "no" ? 0 : Number(row.party.value) });
+      if (chosen) replies.push({ event_id: row.event.id, response: chosen.value, party_size: chosen.value === "no" ? 0 : row.getCount() });
     });
     var food = foodRadios.filter(function (f) { return f.input.checked; })[0];
     return { name: name.value.trim(), phone: phone.value.trim() || null, replies: replies, food_choice: food ? food.value : null, allergies: allergies.value.trim() || null };
@@ -115,28 +150,33 @@
     var d = body && body.detail;
     if (typeof d === "string") return d;
     if (Array.isArray(d) && d.length) {
-      var field = String((d[0].loc || [])[d[0].loc.length - 1] || "");
-      if (field === "name") return "Please enter your name.";
-      if (field === "phone") return "Please check the phone number.";
+      var f = String((d[0].loc || [])[d[0].loc.length - 1] || "");
+      if (f === "name") return "Please enter your name.";
+      if (f === "phone") return "Please check the phone number.";
       return "Please check your answers and try again.";
     }
     return "We could not save your reply. Please try again.";
   }
 
+  function answerText(r) {
+    if (r.response === "no") return "Can’t come";
+    return (r.response === "maybe" ? "Maybe" : "Coming") + " · " + r.party_size + (r.party_size === 1 ? " person" : " people");
+  }
+
   function summary(saved) {
     done.textContent = "";
+    done.appendChild(el("span", { class: "rsvp__tick" }, [icon("M5 12.5l4.5 4.5L19 7.5", 28)]));
     done.appendChild(el("h3", { text: "Thank you, " + saved.name }));
-    done.appendChild(el("p", { text: "We have your reply." }));
+    done.appendChild(el("p", { class: "rsvp__thanks", text: "We have your reply. You can change it any time before the family closes replies." }));
     var list = el("ul", { class: "rsvp__summary" });
     // In the order of the invitation, whatever order the server saved them in.
     cfg.events.forEach(function (event) {
       var r = saved.replies.filter(function (x) { return x.event_id === event.id; })[0];
       if (!r) return;
-      var answer = r.response === "no" ? "Not coming" : (r.response === "maybe" ? "Maybe" : "Coming") + ", " + r.party_size + (r.party_size === 1 ? " person" : " people");
-      list.appendChild(el("li", { text: event.label + ": " + answer }));
+      list.appendChild(el("li", {}, [el("span", { class: "rsvp__summary-event", text: event.name }), el("span", { class: "rsvp__pill rsvp__pill--" + r.response, text: answerText(r) })]));
     });
     done.appendChild(list);
-    var change = el("button", { type: "button", class: "btn btn--line", text: "Change my reply" });
+    var change = el("button", { type: "button", class: "rsvp__change", text: "Change my reply" });
     change.addEventListener("click", function () { done.hidden = true; form.hidden = false; submit.textContent = "Update my reply"; say("", false); name.focus(); });
     done.appendChild(change);
     form.hidden = true;
@@ -151,7 +191,7 @@
     if (busy || preview) return;
     var data = collect();
     if (!data.name) { say("Please enter your name.", true); name.focus(); return; }
-    if (!data.replies.length) { say("Please choose Coming, Maybe or Not coming for at least one event.", true); return; }
+    if (!data.replies.length) { say("Please choose Coming, Maybe or Can’t come for at least one event.", true); return; }
     var code = remembered();
     busy = true;
     submit.disabled = true;
@@ -165,7 +205,7 @@
     }).then(function (r) {
       if (r.ok) { remember(r.body.edit_code); summary(r.body); return; }
       // A saved code the server no longer knows (for example after the family cleared the list): start a fresh reply.
-      if (code && r.status === 404) { try { window.localStorage.removeItem(storeKey); } catch (e) { /* ignore */ } say("We could not find your earlier reply. Press the button again to send a new one.", true); return; }
+      if (code && r.status === 404) { forget(); say("We could not find your earlier reply. Press the button again to send a new one.", true); return; }
       say(words(r.body), true);
     }).catch(function () {
       say("We could not reach the server. Check your connection and try again.", true);
@@ -174,7 +214,7 @@
 
   slot.textContent = "";
   if (closed) {
-    slot.appendChild(el("p", { class: "rsvp__msg", text: "Replies are closed" + (cfg.deadline_label ? " (they closed on " + cfg.deadline_label + ")" : "") + ". Please contact the family." }));
+    slot.appendChild(el("div", { class: "rsvp rsvp--closed" }, [el("p", { class: "rsvp__msg", text: "Replies are closed" + (cfg.deadline_label ? " (they closed on " + cfg.deadline_label + ")" : "") + ". Please contact the family." })]));
     return;
   }
   if (preview) {

@@ -218,7 +218,7 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 
 ## 10. Phase 1: invitation and blessing (weeks 2 to 5, four sprints)
 
-Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. (Sprints 0 to 2 are closed in Jira with all their tickets Done. Sprint 3 has its four tickets, DS-21 to DS-24; Sprint 4 exists with its goal and gets its tickets when Sprint 3 ends.) Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
+Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. (Sprints 0 to 2 are closed in Jira with all their tickets Done. Sprint 3 is active from 24 Nov to 4 Dec with DS-21 to DS-24; Sprint 4 has DS-25 to DS-30.) Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
 
 - [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [x] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button. Marigold is in `templates/marigold/`; the countdown slot is filled later with the guest components. Still to check on a real Android phone and an iPhone
@@ -238,12 +238,12 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P1-07 (DS-22) Wishes editor and UPI IDs for both sides
 - [ ] P1-08 (DS-23) Blessing flow: choose side, wish, amount (₹501, ₹1,001, ₹2,100, ₹5,100, custom), name, note
 - [ ] P1-09 (DS-24) UPI intent route, QR generation, pay screen, "Did the payment go through?" step
-- [ ] P1-10 Ledger page: list, filter by side, Received and Not received buttons, totals of received only
-- [ ] P1-11 RSVP summary page: headcount per event, veg/Jain/other split and allergies list (the caterer summary)
-- [ ] P1-12 Share button with a ready WhatsApp message
-- [ ] P1-13 Privacy pass: confirm no amount or guest list is reachable without family login
-- [ ] P1-14 Deploy web (Vercel; the templates/ folder must ship with it, set `TEMPLATES_DIR` or include files outside the web root) and API (`prod` Docker image); use a paid Supabase project and an always-on API before a real wedding; test the whole flow on two phones
-- [ ] P1-15 Run it at the first real wedding and write down what went wrong
+- [ ] P1-10 (DS-25) Ledger page: list, filter by side, Received and Not received buttons, totals of received only
+- [ ] P1-11 (DS-26) RSVP summary page: headcount per event, veg/Jain/other split and allergies list (the caterer summary)
+- [ ] P1-12 (DS-27) Share button with a ready WhatsApp message
+- [ ] P1-13 (DS-28) Privacy pass: confirm no amount or guest list is reachable without family login
+- [ ] P1-14 (DS-29) Deploy web (Vercel; the templates/ folder must ship with it, set `TEMPLATES_DIR` or include files outside the web root) and API (`prod` Docker image); use a paid Supabase project and an always-on API before a real wedding; test the whole flow on two phones
+- [ ] P1-15 (DS-30) Run it at the first real wedding and write down what went wrong
 
 ## 11. Backlog (do not start until the phase before passes)
 

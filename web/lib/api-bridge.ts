@@ -66,3 +66,26 @@ export async function forwardToApi(path: string, init: { method: "GET" | "POST" 
     headers: { "content-type": res.headers.get("content-type") ?? "application/json", "cache-control": "no-store" },
   });
 }
+
+/**
+ * Pass a guest's request to the API. Guests have no login, so no token is sent; the API checks everything itself.
+ * The visitor's address goes along in X-Forwarded-For so the API can slow down one visitor, not the whole wedding.
+ */
+export async function forwardPublic(request: Request, path: string, init: { method: "GET" | "POST" | "PUT"; body?: string }): Promise<Response> {
+  const visitor = (request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "").split(",")[0].trim();
+  let res: Response;
+  try {
+    res = await fetch(`${apiBase()}${path}`, {
+      method: init.method,
+      headers: { ...(init.body ? { "Content-Type": "application/json" } : {}), ...(visitor ? { "X-Forwarded-For": visitor } : {}) },
+      body: init.body,
+      cache: "no-store",
+    });
+  } catch {
+    return json({ detail: "The server is not reachable right now. Please try again in a moment." }, 502);
+  }
+  return new Response(await res.text(), {
+    status: res.status,
+    headers: { "content-type": res.headers.get("content-type") ?? "application/json", "cache-control": "no-store" },
+  });
+}

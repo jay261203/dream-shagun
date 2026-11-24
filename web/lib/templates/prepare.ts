@@ -65,6 +65,14 @@ export function prepare(data: WeddingData) {
   const title = `${data.bride_name} & ${data.groom_name}`;
   const date_long = longDate(data.wedding_date) ?? firstEvent?.date_long ?? null;
 
+  // Everything the reply form needs, as one piece of text for the page to hand to its script.
+  const rsvp_config = JSON.stringify({
+    slug: data.slug,
+    deadline: data.rsvp_deadline,
+    deadline_label: longDate(data.rsvp_deadline),
+    events: events.map((e) => ({ id: e.id ?? null, label: [e.name, e.date_long].filter(Boolean).join(", ") })),
+  });
+
   return {
     slug: data.slug,
     bride_name: data.bride_name,
@@ -77,6 +85,7 @@ export function prepare(data: WeddingData) {
     rsvp_deadline_long: longDate(data.rsvp_deadline),
     blessings_enabled: data.blessings_enabled,
     first_event_iso: firstEvent?.iso ?? null,
+    rsvp_config,
     events,
     moments,
     has_events: events.length > 0,

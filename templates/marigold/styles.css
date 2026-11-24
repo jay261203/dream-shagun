@@ -112,6 +112,36 @@ a { color: var(--color-primary); }
 .event__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
 .countdown { margin: 14px 0 0; font-weight: 700; font-size: 18px; color: var(--color-primary); }
 
+/* The reply form (filled in by /guest/rsvp.js). Plain, large touch targets, same look as the event cards. */
+.rsvp { display: flex; flex-direction: column; gap: 16px; margin-top: 18px; text-align: left; }
+.rsvp[hidden] { display: none; }
+.rsvp__field { display: flex; flex-direction: column; gap: 6px; }
+.rsvp__field label, .rsvp__event legend { font-weight: 700; font-size: 15px; }
+.rsvp__event legend { float: left; width: 100%; padding: 0; }
+.rsvp__event legend + * { clear: both; }
+.rsvp__field small { color: var(--color-muted); font-size: 13px; }
+.rsvp input[type="text"], .rsvp input[type="tel"], .rsvp textarea, .rsvp select {
+  width: 100%; min-height: 48px; padding: 10px 14px; font: inherit; color: var(--color-ink);
+  background: var(--color-surface); border: 1.5px solid var(--color-line); border-radius: 14px;
+}
+.rsvp input:focus-visible, .rsvp textarea:focus-visible, .rsvp select:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.rsvp__events { display: flex; flex-direction: column; gap: 14px; }
+.rsvp__event { margin: 0; padding: 16px; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 20px; }
+.rsvp__choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.rsvp__choice { position: relative; display: inline-flex; }
+.rsvp__choice input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.rsvp__choice span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1.5px solid var(--color-line); border-radius: 999px; background: var(--color-surface); font-weight: 600; }
+.rsvp__choice input:checked + span { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-bg); }
+.rsvp__choice input:focus-visible + span { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.rsvp__party { margin-top: 12px; max-width: 220px; }
+.rsvp__msg { min-height: 1.4em; font-weight: 600; color: var(--color-muted); }
+.rsvp__msg--bad { color: #b3261e; }
+.rsvp .btn { width: 100%; border: 0; cursor: pointer; }
+.rsvp .btn:disabled { opacity: .55; cursor: not-allowed; }
+.rsvp--done { gap: 10px; }
+.rsvp--done h3 { margin: 0; }
+.rsvp__summary { margin: 0; padding-left: 20px; }
+
 /* A section whose slot has no component yet stays out of sight rather than showing a bare heading. */
 .block--slot:has([data-slot]:empty) { display: none; }
 [data-slot="countdown"]:empty { display: none; }

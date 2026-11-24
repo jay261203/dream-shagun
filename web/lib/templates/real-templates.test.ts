@@ -92,3 +92,27 @@ describe("the music switch", () => {
     expect(off).not.toContain("Music: L Ramakrishnan");
   });
 });
+
+describe("the reply form hook-up", () => {
+  const render = async (extra: Partial<WeddingData>) =>
+    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+
+  it("hands the reply script the wedding's events and deadline, escaped, and loads the script once", async () => {
+    const html = await render({ rsvp_deadline: "2027-01-31", events: [{ ...sample.events[0], id: "e1", name: 'Sangeet "night" <b>' }] });
+    const config = /data-slot="rsvp" data-config="([^"]*)"/.exec(html)?.[1] ?? "";
+    expect(config).not.toContain("<b>");
+    const parsed = JSON.parse(config.replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#x27;/g, "'"));
+    expect(parsed.slug).toBe("diya-and-aarav");
+    expect(parsed.deadline).toBe("2027-01-31");
+    expect(parsed.events).toEqual([{ id: "e1", label: 'Sangeet "night" <b>, 13 February 2027' }]);
+    expect(html.match(/<script src="\/guest\/rsvp\.js\?v=/g)).toHaveLength(1);
+  });
+  it("marks events without an id (a preview) so the form shows but cannot send", async () => {
+    const html = await render({});
+    expect(html).toContain("&quot;id&quot;:null");
+  });
+  it("leaves the script out when the family switches the reply section off", async () => {
+    const html = await render({ sections_enabled: ["cover", "events"] });
+    expect(html).not.toContain('<script src="/guest/rsvp.js');
+  });
+});

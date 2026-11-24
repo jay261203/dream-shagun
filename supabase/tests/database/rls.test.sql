@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(21);
+select plan(24);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -25,8 +25,8 @@ insert into public.events (wedding_id, name, starts_at, kind) values
 insert into public.guests (id, wedding_id, display_name) values
   ('30000000-0000-0000-0000-00000000000a', '10000000-0000-0000-0000-00000000000a', 'Mehta family');
 
-insert into public.rsvps (guest_id, event_id, attending, party_size)
-  select '30000000-0000-0000-0000-00000000000a', id, true, 4 from public.events
+insert into public.rsvps (guest_id, event_id, response, party_size)
+  select '30000000-0000-0000-0000-00000000000a', id, 'yes', 4 from public.events
   where wedding_id = '10000000-0000-0000-0000-00000000000a';
 
 insert into public.blessings (wedding_id, giver_name, amount_paise, method, side) values
@@ -109,6 +109,21 @@ select throws_ok(
   $$insert into storage.objects (bucket_id, name) values ('wedding-photos', '10000000-0000-0000-0000-00000000000a/sneaky.jpg')$$,
   '42501', null, 'a signed-in family member cannot put a photo straight into storage (API only)');
 reset role;
+
+-- ---- replies: the database refuses answers that make no sense, whoever writes them
+select throws_ok(
+  $$insert into public.rsvps (guest_id, event_id, response, party_size)
+    select '30000000-0000-0000-0000-00000000000a', id, 'no', 2 from public.events
+    where wedding_id = '10000000-0000-0000-0000-00000000000a' limit 1$$,
+  '23514', null, 'a "not coming" reply cannot bring a party');
+select throws_ok(
+  $$insert into public.rsvps (guest_id, event_id, response, party_size)
+    select '30000000-0000-0000-0000-00000000000a', id, 'perhaps', 1 from public.events
+    where wedding_id = '10000000-0000-0000-0000-00000000000a' limit 1$$,
+  '23514', null, 'a reply must be yes, maybe or no');
+select throws_ok(
+  $$update public.guests set edit_code = 'too-short' where id = '30000000-0000-0000-0000-00000000000a'$$,
+  '23514', null, 'a guest edit code must be long enough to be unguessable');
 
 select * from finish();
 rollback;

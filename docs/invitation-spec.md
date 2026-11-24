@@ -83,5 +83,5 @@ We never send messages ourselves; WhatsApp Business API stays in the parking lot
 
 ## 5. Open points
 
-- Should an open-link guest be able to edit their reply later? Proposal: yes, by re-entering the same name and phone last four digits. Decide before P1-06.
+- Should an open-link guest be able to edit their reply later? **Decided in P1-06: yes, with a random edit code (`guests.edit_code`) kept in the guest's own browser.** A name and phone digits would let anyone who knows a guest change their reply. The cost: on another phone or after clearing the browser the guest replies again, so the family may see two rows for one person.
 - Do both sides share one RSVP list? Proposal: yes, with `side` shown as a filter. Confirms rule 6 only covers money and UPI.

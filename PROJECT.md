@@ -245,6 +245,34 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [ ] P1-14 (DS-29) Deploy web (Vercel; the templates/ folder must ship with it, set `TEMPLATES_DIR` or include files outside the web root) and API (`prod` Docker image); use a paid Supabase project and an always-on API before a real wedding; test the whole flow on two phones
 - [ ] P1-15 (DS-30) Run it at the first real wedding and write down what went wrong
 
+## 10a. Direction change, 24 Nov 2026: any event, new look (Phase 1b)
+
+The product makes invitations for **any event** (wedding, birthday, baby shower, anniversary, housewarming, corporate)
+for hosts anywhere. A wedding is the first occasion type, not the product. The home page and screens look like a generic
+software site, and some wording sounds written by a machine; both change. Plans: `docs/brand.md` (name, voice, wording
+by occasion) and `docs/design-system.md` (direction, three token layers, components). Epic DS-31.
+
+Decisions: design, wording and occasion types first; internal names (the `weddings` table and routes) are renamed later
+in one mechanical step. The audience is global, so time zone, gifts and languages are their own tasks. The name is open
+(candidates checked on the web, no trademark clearance: see `docs/brand.md`).
+
+What this changes in the rules above: rule 6 (bride's and groom's sides separate) and the gift and blessing flow apply
+to the wedding occasion; for other occasions they are switches the host turns on, off by default.
+
+- [ ] P1B-01 (DS-32) Choose the product name and keep it in one place (`web/lib/brand.ts`)
+- [ ] P1B-02 (DS-33) Design tokens (three layers) and shared UI components
+- [ ] P1B-03 (DS-34) Rewrite product wording in a plain voice, with a banned-word check
+- [ ] P1B-04 (DS-35) Redesign home, gallery and the try-it flow around real example invitations (three directions first)
+- [ ] P1B-05 (DS-36) Occasion types: wedding, birthday, baby shower, anniversary, other
+- [ ] P1B-06 (DS-37) Move create, dashboard, editor and publish onto the new components
+- [ ] P1B-07 (DS-38) Templates for birthday, baby shower, anniversary and corporate
+- [ ] P1B-08 (DS-39) Global: a time zone for each invitation (replace the fixed India time)
+- [ ] P1B-09 (DS-40) Global: gifts beyond UPI, and the gift module as an optional switch
+- [ ] P1B-10 (DS-41) Global: text in more languages
+
+Sprint 3 (DS-21 to DS-24, RSVP and blessings) continues. DS-23 and DS-24 (blessing flow, pay screen) are UPI and wedding
+wording today; P1B-09 reshapes them, so build them as they are written and expect the wording and options to change.
+
 ## 11. Backlog (do not start until the phase before passes)
 
 **Phase 2: the ledger at the venue (weeks 5 to 6).** Test: a relative records every envelope at one wedding without help.

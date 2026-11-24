@@ -218,7 +218,7 @@ Test: we know which of button, QR and copy-ID work, and section 7 is updated to 
 
 ## 10. Phase 1: invitation and blessing (weeks 2 to 5, four sprints)
 
-Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. (Sprint 2 and its five tickets are set up in Jira, Sprints 3 and 4 exist with their goals.) Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
+Sprint 1: P1-01 to P1-03, P1-T1 to P1-T3. Sprint 2: P1-04, P1-05, P1-05a, P1-T4, P1-T5. (Sprints 0 to 2 are closed in Jira with all their tickets Done. Sprint 3 has its four tickets, DS-21 to DS-24; Sprint 4 exists with its goal and gets its tickets when Sprint 3 ends.) Sprint 3: P1-06 to P1-09. Sprint 4: P1-10 to P1-15.
 
 - [x] P1-T1 Template format and server renderer: manifest, Handlebars placeholders, section switches, slots, CSS-variable themes. `GET /w/[slug]` renders published weddings; `GET /t/[id]/...` serves a template's effects.js and assets
 - [x] P1-T2 First template of our own, with opening animation, scroll reveals, countdown and music button. Marigold is in `templates/marigold/`; the countdown slot is filled later with the guest components. Still to check on a real Android phone and an iPhone
@@ -232,12 +232,12 @@ Test: one real wedding uses it and at least 10 guests send a blessing through it
 - [x] P1-02 FastAPI skeleton: health route, Supabase client, auth dependency, test setup
 - [x] P1-03 Google login and "create wedding" form (names, slug, cover photo, story). Built: `POST /weddings`, `GET /weddings/slug-check`, `create_wedding()`; `/login` (Google button), `/auth/callback`, `/create` (draft carried over, link-name check, side), `/dashboard`, sign-out; tokens verified with HS256 or the project's JWKS. Checked with a real Google login on a computer. Not yet checked on phones (needs the hosted Supabase, see `docs/google-login.md`)
 - [x] P1-04 (DS-16) Events editor (add, edit, reorder; map link; `kind`, `dress_code`, `note`; see `docs/invitation-spec.md`). Built: `/editor/[id]/events`, events API with family-membership check (outsiders get 404), times entered as India time and stored UTC, max 20 events. Checked with real sign-ins: owner adds/edits/deletes/reorders, a second user is refused on page and API, guest page shows the saved order. Events cannot be written by clients directly (3 database tests)
-- [ ] P1-05 (DS-17) Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title. Built: countdown to the earliest event (stops at zero), "Add to calendar" (.ics per event, India time stored as UTC) on each event. Still to check: calendar file in Google and Apple Calendar, WhatsApp preview (needs the deployed site or a tunnel), countdown on a real phone
+- [x] P1-05 (DS-17) Guest page `/w/[slug]`: one template, countdown, events with map buttons, WhatsApp preview image and title. Built: countdown to the earliest event (stops at zero), "Add to calendar" (.ics per event, India time stored as UTC) on each event. Countdown and calendar link checked on a real phone. Still to check: WhatsApp preview image (needs the deployed site or a tunnel; moved to the deployment task P1-14)
 - [x] P1-05a (DS-18) "Our journey" section: dated moments (first met, proposal, engagement) with photo and caption, edited by the family, shown as a timeline on the guest page. Built: `/editor/[id]/journey` (add, edit, delete, reorder, up to 12 moments), `moments` and `photos` API routes, public `wedding-photos` bucket (JPEG, 2 MB cap, written only by the API). Photos are shrunk in the browser, then re-drawn on the server to 1600 px with GPS and camera details removed. Checked with real sign-ins: 4032x3024 photo with GPS stored as 96 KB, three moments with photos show in order on the guest page, outsider refused. Not yet checked on a phone
-- [ ] P1-06 RSVP per event with party size, food choice and allergies; optional RSVP deadline; add-to-calendar link on events
-- [ ] P1-07 Wishes editor and UPI IDs for both sides
-- [ ] P1-08 Blessing flow: choose side, wish, amount (₹501, ₹1,001, ₹2,100, ₹5,100, custom), name, note
-- [ ] P1-09 UPI intent route, QR generation, pay screen, "Did the payment go through?" step
+- [ ] P1-06 (DS-21) RSVP per event with party size, food choice and allergies; optional RSVP deadline; add-to-calendar link on events
+- [ ] P1-07 (DS-22) Wishes editor and UPI IDs for both sides
+- [ ] P1-08 (DS-23) Blessing flow: choose side, wish, amount (₹501, ₹1,001, ₹2,100, ₹5,100, custom), name, note
+- [ ] P1-09 (DS-24) UPI intent route, QR generation, pay screen, "Did the payment go through?" step
 - [ ] P1-10 Ledger page: list, filter by side, Received and Not received buttons, totals of received only
 - [ ] P1-11 RSVP summary page: headcount per event, veg/Jain/other split and allergies list (the caterer summary)
 - [ ] P1-12 Share button with a ready WhatsApp message

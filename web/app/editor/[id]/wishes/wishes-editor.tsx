@@ -136,7 +136,7 @@ export function WishesEditor({ weddingId, brideName, groomName, initial }: Props
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-bold tracking-tight">Wishes and UPI</h1>
-        <p className="text-base text-muted">Guests pay Shagun straight to your account. We never hold the money, and guests never see your UPI ID.</p>
+        <p className="text-base text-muted">Where gifts go, for the optional gift page that comes next. Nothing here shows on your invitation yet, and we never hold the money.</p>
       </div>
       {SIDES.map((side) => (
         <SideCard key={side} weddingId={weddingId} side={side} title={titles[side]} initial={initial[side]} />

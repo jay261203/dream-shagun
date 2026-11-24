@@ -25,7 +25,7 @@ export function sampleWedding(overrides: Partial<WeddingData> = {}): WeddingData
     color_preset: null,
     font_pair: null,
     music_url: null,
-    sections_enabled: ["cover", "couple", "journey", "events", "rsvp", "blessing"],
+    sections_enabled: ["cover", "couple", "journey", "events", "rsvp", "guestbook"],
     languages: ["en"],
     blessings_enabled: true,
     rsvp_deadline: null,

@@ -19,7 +19,7 @@ const sample: WeddingData = {
   color_preset: null,
   font_pair: null,
   music_url: null,
-  sections_enabled: ["cover", "couple", "journey", "events", "rsvp", "blessing"],
+  sections_enabled: ["cover", "couple", "journey", "events", "rsvp", "guestbook"],
   languages: ["en"],
   blessings_enabled: true,
   rsvp_deadline: "2027-01-31",
@@ -117,26 +117,25 @@ describe("the reply form hook-up", () => {
   });
 });
 
-describe("the blessing form hook-up", () => {
+describe("the guestbook hook-up", () => {
   const render = async (extra: Partial<WeddingData>) =>
     renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://gatherbell.example" });
 
-  it("loads the blessing script once and hands it only the link name, the host names and the preview flag", async () => {
+  it("loads the guestbook script once and hands it only the link name and the preview flag", async () => {
     const html = await render({ events: [{ ...sample.events[0], id: "e1" }] });
-    expect(html.match(/<script src="\/guest\/blessing\.js\?v=/g)).toHaveLength(1);
-    const config = /data-slot="blessing" data-config="([^"]*)"/.exec(html)?.[1] ?? "";
-    const parsed = JSON.parse(config.replace(/&quot;/g, '"').replace(/&amp;/g, "&"));
-    expect(parsed).toEqual({ slug: "diya-and-aarav", preview: false, hosts: { bride: "Diya", groom: "Aarav" } });
+    expect(html.match(/<script src="\/guest\/guestbook\.js\?v=/g)).toHaveLength(1);
+    const config = /data-slot="guestbook" data-config="([^"]*)"/.exec(html)?.[1] ?? "";
+    expect(JSON.parse(config.replace(/&quot;/g, '"').replace(/&amp;/g, "&"))).toEqual({ slug: "diya-and-aarav", preview: false });
   });
-  it("never puts a UPI ID or payee name in the page", async () => {
-    const html = await render({});
-    expect(html).not.toMatch(/upi|payee/i);
-  });
-  it("marks a preview (events without ids)", async () => {
+  it("marks a preview (events without ids) so the form shows but cannot send", async () => {
     expect(await render({})).toContain("&quot;preview&quot;:true");
   });
-  it("leaves the script out when blessings are off or the section is switched off", async () => {
-    expect(await render({ blessings_enabled: false })).not.toContain('<script src="/guest/blessing.js');
-    expect(await render({ sections_enabled: ["cover", "events"] })).not.toContain('<script src="/guest/blessing.js');
+  it("says nothing about amounts, UPI or payment in the page", async () => {
+    const html = await render({});
+    expect(html).not.toMatch(/upi|payee|₹|amount_/i);
+    expect(html).not.toContain("/guest/blessing.js");
+  });
+  it("leaves the script out when the family switches the section off", async () => {
+    expect(await render({ sections_enabled: ["cover", "events"] })).not.toContain('<script src="/guest/guestbook.js');
   });
 });

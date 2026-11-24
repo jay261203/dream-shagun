@@ -3,7 +3,8 @@ from datetime import date
 from pydantic import BaseModel, Field, field_validator
 
 # Sections a template can switch on or off. "cover" is always shown, so it is always kept.
-KNOWN_SECTIONS = ("cover", "couple", "journey", "events", "countdown", "rsvp", "blessing", "contact")
+# "blessing" is the old section name; it is still accepted so invitations saved earlier keep working, but no page shows it.
+KNOWN_SECTIONS = ("cover", "couple", "journey", "events", "countdown", "rsvp", "guestbook", "blessing", "contact")
 
 _CODE = r"^[a-z0-9-]+$"
 

@@ -107,7 +107,7 @@ ${rewriteAssets(manifest.id, template.css)}</style>
 ${body}
 ${template.hasEffects ? `<script src="/t/${esc(manifest.id)}/effects.js?v=${esc(template.effectsVersion ?? "0")}" defer></script>` : ""}
 ${body.includes('data-slot="rsvp"') ? `<script src="/guest/rsvp.js?v=${guestScriptVersion("rsvp")}" defer></script>` : ""}
-${body.includes('data-slot="blessing"') ? `<script src="/guest/blessing.js?v=${guestScriptVersion("blessing")}" defer></script>` : ""}
+${body.includes('data-slot="guestbook"') ? `<script src="/guest/guestbook.js?v=${guestScriptVersion("guestbook")}" defer></script>` : ""}
 </body>
 </html>
 `;

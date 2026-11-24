@@ -29,8 +29,8 @@ export const SECTION_CHOICES: { key: string; label: string; hint: string }[] = [
   { key: "couple", label: "Our story", hint: "The few words you wrote about the two of you." },
   { key: "journey", label: "Our journey", hint: "The timeline of dated moments with photos." },
   { key: "events", label: "Events", hint: "Every function with time, place and a map button." },
-  { key: "rsvp", label: "Replies", hint: "Guests say which events they will come to. Shown once replies are ready." },
-  { key: "blessing", label: "Blessings", hint: "Guests can send a blessing. Shown once blessings are ready." },
+  { key: "rsvp", label: "Replies", hint: "Guests say which events they will come to." },
+  { key: "guestbook", label: "Messages", hint: "Guests leave a short message. Only you can read them." },
 ];
 
 /** The list to save when one section is switched. Sections this editor does not manage are kept as they were. */

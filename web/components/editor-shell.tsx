@@ -13,6 +13,7 @@ const SECTIONS = [
   { key: "look", label: "Look and music", href: "look" },
   { key: "wishes", label: "Wishes and UPI", href: "wishes" },
   { key: "replies", label: "Replies", href: "replies" },
+  { key: "messages", label: "Messages", href: "messages" },
   { key: "publish", label: "Publish", href: "publish" },
 ] as const;
 

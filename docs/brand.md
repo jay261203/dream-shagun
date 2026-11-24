@@ -61,7 +61,8 @@ The product's own screens use neutral words. The occasion type fills the rest. (
 | Hosts field | The couple (two names) | Host (one name) | Parents-to-be (one or two) | The couple | Organiser |
 | Schedule | Events (mehendi, sangeet, pheras, reception) | Party | Shower | Celebration | Sessions |
 | Guest reply | RSVP per event | RSVP | RSVP | RSVP | Register |
-| Gifts module (optional) | Blessings or Shagun by UPI | Off by default | Off by default | Off by default | Off |
+| Gifts (optional page) | Small link to a gift page, on by default | Not mentioned | Not mentioned | Not mentioned | Not mentioned |
+| Guestbook | Messages | Messages | Messages | Messages | Messages |
 | Sides | Bride's side, groom's side (optional) | none | none | none | none |
 | Story section | Our story, Our journey | About | The news | Our story | About |
 

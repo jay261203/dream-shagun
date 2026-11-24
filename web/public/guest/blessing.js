@@ -29,6 +29,8 @@
   var state = { side: null, amount: null, custom: false };
   var step = 1;
   var busy = false;
+  var finished = false;
+  var lastCheck = 0;
 
   var box = el("div", { class: "bless" });
   var live = el("p", { class: "bless__msg", role: "status", "aria-live": "polite" });
@@ -142,6 +144,7 @@
   }
 
   function done(who) {
+    finished = true;
     clear();
     box.className = "bless bless--done";
     box.appendChild(el("h3", { text: "Thank you, " + who }));
@@ -167,6 +170,41 @@
     render();
   }
 
+  // The family can change who takes blessings while a guest has the page open. Ask again when the guest comes back to the
+  // tab (at most every 5 seconds) and update what is showing, without throwing away what they have typed.
+  function update(data) {
+    var usable = data && data.enabled && data.sides && data.sides.length;
+    if (!usable) {
+      if (options && !finished) { options = null; slot.textContent = ""; } // nothing set up any more: the section hides itself
+      return;
+    }
+    if (!options) { start(data); return; }
+    if (JSON.stringify(options) === JSON.stringify(data) || finished) return;
+    options = data;
+    var stillThere = options.sides.some(function (x) { return x.side === state.side; });
+    if (!stillThere) {
+      state.side = options.sides.length === 1 ? options.sides[0].side : null;
+      step = options.sides.length > 1 ? 1 : 2;
+      render();
+      if (state.amount !== null) say("The sides taking blessings changed, so please choose again.", true);
+    } else if (step <= 2) {
+      render(); // the guest has not typed a name yet: show the new wishes and sides straight away
+    }
+    // Step 3 (name and note) is left alone; the server checks the side again when the blessing is sent.
+  }
+  function refresh() {
+    if (cfg.preview || busy || doc.visibilityState === "hidden") return;
+    var now = Date.now();
+    if (now - lastCheck < 5000) return;
+    lastCheck = now;
+    fetch("/api/w/" + encodeURIComponent(cfg.slug) + "/blessing")
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) { if (data) update(data); })
+      .catch(function () { /* keep what is showing */ });
+  }
+  doc.addEventListener("visibilitychange", refresh);
+  window.addEventListener("focus", refresh);
+
   if (cfg.preview) {
     // The family's preview has no published page to ask, so it shows both sides with a sample amount list.
     start({ enabled: true, presets: [501, 1001, 2100, 5100], min_rupees: 1, max_rupees: 100000, sides: [{ side: "bride", host: (cfg.hosts || {}).bride || "Bride", wish: null }, { side: "groom", host: (cfg.hosts || {}).groom || "Groom", wish: null }] });
@@ -174,6 +212,6 @@
   }
   fetch("/api/w/" + encodeURIComponent(cfg.slug) + "/blessing")
     .then(function (res) { return res.ok ? res.json() : null; })
-    .then(start)
+    .then(function (data) { lastCheck = Date.now(); start(data); })
     .catch(function () { /* the section stays hidden if the server cannot be reached */ });
 })();

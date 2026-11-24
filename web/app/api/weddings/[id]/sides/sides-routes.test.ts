@@ -6,6 +6,8 @@ vi.mock("@/lib/api-bridge", async () => {
   return { ...real, forwardToApi: (...args: unknown[]) => (forward as (...a: unknown[]) => Promise<Response>)(...args) };
 });
 
+import { brand } from "@/lib/brand";
+
 import { POST as test } from "./[side]/test/route";
 import { PUT } from "./[side]/route";
 
@@ -45,7 +47,7 @@ describe("POST /api/weddings/[id]/sides/[side]/test", () => {
     expect(body.link.startsWith("upi://pay?")).toBe(true);
     expect(body.qr.startsWith("data:image/png;base64,")).toBe(true);
     expect(res.headers.get("cache-control")).toBe("no-store");
-    expect(forward).toHaveBeenCalledWith(`/weddings/${ID}/sides/bride/test-link`, { method: "GET" });
+    expect(forward).toHaveBeenCalledWith(`/weddings/${ID}/sides/bride/test-link?note=Test%20from%20${brand.name}`, { method: "GET" });
   });
   it("passes the API's refusal on untouched", async () => {
     forward.mockResolvedValueOnce(new Response(JSON.stringify({ detail: "Save a UPI ID and a name for this side first" }), { status: 422 }));

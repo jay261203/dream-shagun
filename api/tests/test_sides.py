@@ -122,6 +122,13 @@ class TestTestLink:
         q = parse_qs(link.query)
         assert link.scheme == "upi" and q["pa"] == ["dev@okbank"] and q["pn"] == ["Dev Shah"] and q["am"] == ["1.00"] and q["cu"] == ["INR"]
 
+    def test_the_note_in_the_paying_app_comes_from_the_caller_and_has_a_plain_default(self, client, db, owner):
+        custom = parse_qs(urlparse(client.get(url("groom", tail="/test-link?note=Test%20from%20Acme"), headers=owner).json()["link"]).query)
+        plain = parse_qs(urlparse(client.get(url("groom", tail="/test-link"), headers=owner).json()["link"]).query)
+        assert custom["tn"] == ["Test from Acme"] and plain["tn"] == ["Test payment"]
+        assert client.get(url("groom", tail="/test-link?note="), headers=owner).status_code == 422
+        assert client.get(url("groom", tail="/test-link?note=" + "n" * 51), headers=owner).status_code == 422
+
     def test_asks_to_save_first_when_the_side_is_not_set_up(self, client, db, owner):
         res = client.get(url("bride", tail="/test-link"), headers=owner)
         assert res.status_code == 422 and "save" in res.json()["detail"].lower()

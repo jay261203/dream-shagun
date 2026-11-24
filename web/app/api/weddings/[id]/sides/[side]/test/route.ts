@@ -1,6 +1,7 @@
 import QRCode from "qrcode";
 
 import { forwardToApi, isId, isSameOrigin, refuse } from "@/lib/api-bridge";
+import { brand } from "@/lib/brand";
 import { isSide } from "@/lib/sides";
 
 /**
@@ -12,7 +13,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
   if (!isSameOrigin(request)) return refuse(403, "Not allowed");
   if (!isId(id) || !isSide(side)) return refuse(404, "Not found");
 
-  const res = await forwardToApi(`/weddings/${id}/sides/${side}/test-link`, { method: "GET" });
+  const res = await forwardToApi(`/weddings/${id}/sides/${side}/test-link?note=${encodeURIComponent(`Test from ${brand.name}`)}`, { method: "GET" });
   if (!res.ok) return res;
   const { link } = (await res.json()) as { link: string };
   const qr = await QRCode.toDataURL(link, { margin: 1, width: 240, errorCorrectionLevel: "M" });

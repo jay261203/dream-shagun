@@ -6,7 +6,7 @@ wording that every host sees. A wedding is the first occasion type, not the prod
 
 ## The name
 
-Working name since 24 Nov 2026: **Gatherbell**, kept in one place (`web/lib/brand.ts` for the web app, `api/app/brand.py` for the API; a test fails if the name is written anywhere else). It is **not cleared**: the trademark registers and a domain check are still to do. Left on the old name on purpose: the local database's project id in `supabase/config.toml` (it names the Docker containers and volumes; renaming wipes the local data), the repository folder and the Jira project name.
+Working name since 24 Nov 2026: **Gatherbell**, kept in one place, `web/lib/brand.ts` (the API has no copy: the web app sends the one line of text the API needs); a test fails if the name is written anywhere else. It is **not cleared**: the trademark registers and a domain check are still to do. Left on the old name on purpose: the local database's project id in `supabase/config.toml` (it names the Docker containers and volumes; renaming wipes the local data), the repository folder and the Jira project name.
 
 Checked on 24 Nov 2026 with a plain web search. **This is not a trademark clearance.** Before choosing, search the
 trademark registers (WIPO Global Brand Database, USPTO, India IPO) and a domain registrar.

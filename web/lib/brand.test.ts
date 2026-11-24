@@ -25,9 +25,9 @@ describe("the product name lives in one place", () => {
     expect(brand.slug).toBe(brand.name.toLowerCase());
     expect(brand.domain).toBe(`${brand.slug}.example`);
   });
-  it("is not written out in any page, component, template or API file besides brand.ts and brand.py", () => {
+  it("is not written out in any page, component, template or API file besides brand.ts", () => {
     const hits = [...files(path.join(root, "web", "app")), ...files(path.join(root, "web", "components")), ...files(path.join(root, "web", "lib")), ...files(path.join(root, "web", "public")), ...files(path.join(root, "templates")), ...files(path.join(root, "api", "app"))]
-      .filter((f) => !/brand\.(ts|py)$/.test(f))
+      .filter((f) => !/brand\.ts$/.test(f))
       .filter((f) => new RegExp(`${brand.name}|${brand.slug}`, "i").test(readFileSync(f, "utf8")))
       .map((f) => path.relative(root, f));
     expect(hits).toEqual([]);

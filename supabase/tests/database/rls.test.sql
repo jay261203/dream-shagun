@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(24);
+select plan(30);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -124,6 +124,24 @@ select throws_ok(
 select throws_ok(
   $$update public.guests set edit_code = 'too-short' where id = '30000000-0000-0000-0000-00000000000a'$$,
   '23514', null, 'a guest edit code must be long enough to be unguessable');
+
+-- ---- wishes and UPI: guests read a wish as text and never any money detail
+set local role anon;
+select throws_ok('select groom_side_upi from public.weddings', '42501', null, 'anon cannot read the groom side UPI ID');
+select throws_ok('select bride_side_payee_name from public.weddings', '42501', null, 'anon cannot read the bride side payee name');
+select throws_ok('select groom_side_payee_name from public.weddings', '42501', null, 'anon cannot read the groom side payee name');
+reset role;
+insert into public.wishes (wedding_id, side, title) values ('10000000-0000-0000-0000-00000000000a', 'bride', 'Bless our home');
+select throws_ok(
+  $$insert into public.wishes (wedding_id, side, title) values ('10000000-0000-0000-0000-00000000000a', 'bride', 'A second bride wish')$$,
+  '23505', null, 'a side can have only one wish');
+select throws_ok(
+  $$insert into public.wishes (wedding_id, side, title) values ('10000000-0000-0000-0000-00000000000a', 'both', 'x')$$,
+  '23514', null, 'a wish belongs to the bride side or the groom side');
+set local role anon;
+select is((select count(*)::int from public.wishes where wedding_id = '10000000-0000-0000-0000-00000000000a'), 1,
+  'a guest can read the wish of a published wedding');
+reset role;
 
 select * from finish();
 rollback;

@@ -11,7 +11,7 @@ const SECTIONS = [
   { key: "events", label: "Events", href: "events" },
   { key: "sections", label: "Sections", href: "sections" },
   { key: "look", label: "Look and music", href: "look" },
-  { key: "wishes", label: "Wishes and UPI", href: null },
+  { key: "wishes", label: "Wishes and UPI", href: "wishes" },
   { key: "replies", label: "Replies", href: "replies" },
   { key: "publish", label: "Publish", href: "publish" },
 ] as const;
@@ -46,7 +46,7 @@ export function EditorShell({ weddingId, names, status, active, children }: Prop
 
       <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col gap-6 px-5 py-8 sm:px-10 lg:flex-row lg:flex-wrap lg:gap-10 xl:flex-nowrap">
         <nav aria-label="Invitation sections" className="flex gap-1 overflow-x-auto lg:w-56 lg:shrink-0 lg:flex-col lg:overflow-visible">
-          {SECTIONS.map((s) =>
+          {(SECTIONS as readonly { key: EditorSection; label: string; href: string | null }[]).map((s) =>
             s.href ? (
               <Link
                 key={s.key}

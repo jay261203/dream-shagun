@@ -7,6 +7,8 @@ import { getWeddingForFamily } from "@/lib/wedding";
 
 const DEFAULT_TEMPLATE = process.env.DEFAULT_TEMPLATE_ID ?? "marigold";
 
+const DRAFT_BANNER = '<div style="position:sticky;top:0;z-index:99;background:#231a14;color:#fff;font:700 14px system-ui,sans-serif;text-align:center;padding:10px 12px">Draft. Only the family can see this. Not for guests.</div>';
+
 function plain(status: number, text: string): Response {
   return new Response(`<!doctype html><meta name="color-scheme" content="light"><p style="font:16px system-ui;padding:24px">${text}</p>`, {
     status,
@@ -36,7 +38,10 @@ export async function GET(request: Request, ctx: { params: Promise<{ id: string 
   }
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin;
-  return new Response(renderWedding(template, wedding, { origin }), {
+  let html = renderWedding(template, wedding, { origin });
+  // The shareable draft link adds a banner so nobody mistakes it for the live page.
+  if (new URL(request.url).searchParams.get("banner") === "1") html = html.replace(/<body[^>]*>/, (tag) => `${tag}${DRAFT_BANNER}`);
+  return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",
       "content-security-policy": guestPageCsp("self"),

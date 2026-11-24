@@ -110,7 +110,9 @@ async function Weddings({ searchParams }: { searchParams: SearchParams }) {
                     View invitation
                   </Link>
                 ) : (
-                  <span className="text-sm text-muted">Publishing comes in the next task.</span>
+                  <Link href={`/editor/${wedding.id}/publish`} className="inline-flex min-h-11 items-center text-[15px] font-bold text-accent underline">
+                    Publish
+                  </Link>
                 )}
               </div>
             </li>

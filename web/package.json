@@ -15,12 +15,14 @@
     "handlebars": "^4.7.10",
     "next": "16.4.6",
     "node-html-parser": "^9.0.7",
+    "qrcode": "1.5.4",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^22.20.5",
+    "@types/qrcode": "1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

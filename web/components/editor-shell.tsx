@@ -12,6 +12,7 @@ const SECTIONS = [
   { key: "sections", label: "Sections", href: "sections" },
   { key: "look", label: "Look and music", href: "look" },
   { key: "wishes", label: "Wishes and UPI", href: null },
+  { key: "publish", label: "Publish", href: "publish" },
 ] as const;
 
 export type EditorSection = (typeof SECTIONS)[number]["key"];

@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import { brand } from "@/lib/brand";
 
 const figtree = Figtree({ subsets: ["latin"], display: "swap", variable: "--font-figtree" });
 
 export const metadata: Metadata = {
-  title: "Dream Shagun: digital wedding invitations for Indian families",
-  description: "One WhatsApp link with your events, replies and blessings. Guests need no app.",
+  title: `${brand.name}: ${brand.tagline}`,
+  description: brand.description,
 };
 
 // The product is designed in light colours only. Declaring that stops the browser, or its dark mode, from restyling

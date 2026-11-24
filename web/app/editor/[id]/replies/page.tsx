@@ -6,8 +6,9 @@ import { SiteHeader } from "@/components/site-chrome";
 import { loadEditorWedding } from "@/lib/editor-context";
 import { answerLabel, countsByEvent, foodLabel, repliesByGuest, type ReplyGuest, type ReplyRow } from "@/lib/replies";
 import { createClient } from "@/lib/supabase/server";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Replies | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Replies") };
 
 export default function RepliesPage({ params }: { params: Promise<{ id: string }> }) {
   return (

@@ -1,4 +1,5 @@
 import type { WeddingEvent } from "./templates/types";
+import { brand } from "./brand";
 
 /** Events have a start but no end, so the calendar entry is given a fixed length. */
 const DURATION_MS = 3 * 60 * 60 * 1000;
@@ -45,11 +46,11 @@ export function buildIcs(event: WeddingEvent & { id: string }, title: string, no
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Dream Shagun//Invitation//EN",
+    `PRODID:-//${brand.name}//Invitation//EN`,
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${event.id}@dreamshagun`,
+    `UID:${event.id}@${brand.slug}`,
     `DTSTAMP:${utc(now)}`,
     `DTSTART:${utc(start)}`,
     `DTEND:${utc(new Date(start.getTime() + DURATION_MS))}`,

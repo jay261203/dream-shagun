@@ -6,8 +6,9 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { currentClaims } from "@/lib/supabase/server";
 
 import { CreateForm } from "./create-form";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Create your wedding | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Create your wedding") };
 
 export default function CreatePage() {
   return (

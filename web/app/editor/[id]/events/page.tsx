@@ -9,8 +9,9 @@ import { rowToEvent } from "@/lib/events";
 import { createClient, currentClaims } from "@/lib/supabase/server";
 
 import { EventsEditor } from "./events-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Events | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Events") };
 
 export default function EventsPage({ params }: { params: Promise<{ id: string }> }) {
   return (

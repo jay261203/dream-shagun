@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from supabase import Client
 
+from app.brand import NAME
 from app.db import get_supabase
 from app.models.side import Side, SideIn, SideOut
 from app.services.members import Member, require_member
@@ -54,4 +55,4 @@ def test_link(side: Side, member: Family, db: Db) -> dict[str, str]:
     upi_id, payee = (rows[0].get(upi_column), rows[0].get(name_column)) if rows else (None, None)
     if not upi_id or not payee:
         raise HTTPException(422, "Save a UPI ID and a name for this side first")
-    return {"link": build_upi_link(upi_id, payee, 100, "Test from Dream Shagun")}
+    return {"link": build_upi_link(upi_id, payee, 100, f"Test from {NAME}")}

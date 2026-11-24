@@ -1,6 +1,6 @@
-# Dream Shagun
+# Gatherbell (working name)
 
-Wedding invitation website with RSVP, blessings by UPI and a Shagun ledger.
+Invitations for any occasion, with replies and optional gifts. Weddings come first.
 The plan, rules and task list live in [PROJECT.md](PROJECT.md). Sprints are tracked in Jira (space **DS**).
 
 ## Run locally

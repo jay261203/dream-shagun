@@ -6,8 +6,9 @@ import { SiteHeader } from "@/components/site-chrome";
 import { loadEditorWedding } from "@/lib/editor-context";
 
 import { SectionsEditor } from "./sections-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Sections | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Sections") };
 
 export default function SectionsPage({ params }: { params: Promise<{ id: string }> }) {
   return (

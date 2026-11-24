@@ -6,9 +6,10 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { listTemplates } from "@/lib/templates/list";
 
 import { TryForm } from "./try-form";
+import { pageTitle } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Try a template with your names | Dream Shagun",
+  title: pageTitle("Try a template with your names"),
 };
 
 export default function TemplatePage({ params }: { params: Promise<{ id: string }> }) {

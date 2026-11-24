@@ -5,8 +5,10 @@ import { Suspense } from "react";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { createClient, currentClaims } from "@/lib/supabase/server";
+import { pageTitle } from "@/lib/brand";
+import { brand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Your weddings | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Your weddings") };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -99,7 +101,7 @@ async function Weddings({ searchParams }: { searchParams: SearchParams }) {
               </p>
               <p className="text-[15px]">
                 <span className="text-muted">Link: </span>
-                <span className="font-semibold">dreamshagun.example/w/{wedding.slug}</span>
+                <span className="font-semibold">{brand.domain}/w/{wedding.slug}</span>
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 <Link href={`/editor/${wedding.id}/events`} className="inline-flex min-h-11 items-center rounded-xl border border-ink px-5 text-[15px] font-bold hover:bg-surface">

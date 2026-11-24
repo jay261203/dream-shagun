@@ -28,7 +28,7 @@ describe("buildIcs", () => {
     expect(ics.startsWith("BEGIN:VCALENDAR\r\nVERSION:2.0\r\n")).toBe(true);
     expect(ics.endsWith("END:VEVENT\r\nEND:VCALENDAR\r\n")).toBe(true);
     expect(ics.replace(/\r\n/g, "")).not.toMatch(/[\r\n]/);
-    expect(ics).toContain("UID:11111111-1111-1111-1111-111111111111@dreamshagun");
+    expect(ics).toContain("UID:11111111-1111-1111-1111-111111111111@gatherbell");
   });
   it("escapes separators and newlines", () => {
     expect(ics).toContain("SUMMARY:Pheras - Meera & Dev");

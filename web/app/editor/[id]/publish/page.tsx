@@ -10,8 +10,9 @@ import { checklist, inviteUrl, whatsappLink, whatsappMessage } from "@/lib/publi
 import { createClient } from "@/lib/supabase/server";
 
 import { PublishPanel } from "./publish-panel";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Publish | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Publish") };
 
 export default function PublishPage({ params }: { params: Promise<{ id: string }> }) {
   return (

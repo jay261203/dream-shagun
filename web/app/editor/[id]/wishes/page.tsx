@@ -8,8 +8,9 @@ import type { SideForm } from "@/lib/sides";
 import { createClient } from "@/lib/supabase/server";
 
 import { WishesEditor } from "./wishes-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Wishes and UPI | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Wishes and UPI") };
 
 export default function WishesPage({ params }: { params: Promise<{ id: string }> }) {
   return (

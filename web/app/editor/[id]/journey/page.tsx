@@ -9,8 +9,9 @@ import { rowToMoment } from "@/lib/moments";
 import { createClient, currentClaims } from "@/lib/supabase/server";
 
 import { JourneyEditor } from "./journey-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Our journey | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Our journey") };
 
 export default function JourneyPage({ params }: { params: Promise<{ id: string }> }) {
   return (

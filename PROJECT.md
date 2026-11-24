@@ -259,7 +259,7 @@ in one mechanical step. The audience is global, so time zone, gifts and language
 What this changes in the rules above: rule 6 (bride's and groom's sides separate) and the gift and blessing flow apply
 to the wedding occasion; for other occasions they are switches the host turns on, off by default.
 
-- [ ] P1B-01 (DS-32) Choose the product name and keep it in one place (`web/lib/brand.ts`)
+- [x] P1B-01 (DS-32) Choose the product name and keep it in one place (`web/lib/brand.ts`). Working name Gatherbell, read from one file by every title, the header, calendar files, the guest page footer and the API; a test guards it. Not trademark-cleared; the local database id, repo and Jira project keep the old name
 - [ ] P1B-02 (DS-33) Design tokens (three layers) and shared UI components
 - [ ] P1B-03 (DS-34) Rewrite product wording in a plain voice, with a banned-word check
 - [ ] P1B-04 (DS-35) Redesign home, gallery and the try-it flow around real example invitations (three directions first)

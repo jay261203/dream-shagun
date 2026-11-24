@@ -1,3 +1,4 @@
+import { brand } from "./brand";
 /** What a visitor typed on "Try with your names", kept in this browser until they sign in and create the wedding. */
 export type Draft = {
   template_id: string;
@@ -8,7 +9,7 @@ export type Draft = {
   color_preset: string | null;
 };
 
-const KEY = "dreamshagun.draft.v1";
+const KEY = `${brand.slug}.draft.v1`;
 
 function isDraft(value: unknown): value is Draft {
   if (typeof value !== "object" || value === null) return false;

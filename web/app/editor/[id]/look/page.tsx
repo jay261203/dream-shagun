@@ -7,8 +7,9 @@ import { loadEditorWedding } from "@/lib/editor-context";
 import { loadTemplate } from "@/lib/templates/load";
 
 import { LookEditor } from "./look-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Look and music | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Look and music") };
 
 export default function LookPage({ params }: { params: Promise<{ id: string }> }) {
   return (

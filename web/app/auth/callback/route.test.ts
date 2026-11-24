@@ -68,7 +68,7 @@ describe("GET /auth/callback", () => {
   });
 
   it("uses the configured public address when there is one", async () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://dreamshagun.example";
-    expect(location(await callback("?code=abc")).origin).toBe("https://dreamshagun.example");
+    process.env.NEXT_PUBLIC_SITE_URL = "https://gatherbell.example";
+    expect(location(await callback("?code=abc")).origin).toBe("https://gatherbell.example");
   });
 });

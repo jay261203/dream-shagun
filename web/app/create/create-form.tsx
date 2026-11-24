@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { clearDraft, loadDraft } from "@/lib/draft";
 import { finalSlug, isValidSlug, suggestSlug, typingSlug } from "@/lib/slug";
 import { MAX_NAME_LENGTH, validDate } from "@/lib/templates/preview";
+import { brand } from "@/lib/brand";
 
 type Side = "bride" | "groom";
 type SlugState = { kind: "idle" } | { kind: "checking" } | { kind: "free" } | { kind: "taken"; suggestions: string[] } | { kind: "invalid" };
@@ -158,7 +159,7 @@ export function CreateForm({ email }: { email: string | null }) {
         <label className={`${boxBase} ${slugState.kind === "taken" || errors.slug ? "border-danger" : "border-field"}`}>
           <span className={label}>Your invitation link</span>
           <span className="flex items-baseline pt-1">
-            <span className="whitespace-nowrap text-[15px] text-muted">dreamshagun.example/w/</span>
+            <span className="whitespace-nowrap text-[15px] text-muted">{brand.domain}/w/</span>
             <input
               value={slug}
               onChange={(e) => {

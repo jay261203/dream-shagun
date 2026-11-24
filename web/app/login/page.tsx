@@ -9,8 +9,9 @@ import { currentClaims } from "@/lib/supabase/server";
 
 import { DraftSummary } from "./draft-summary";
 import { GoogleButton } from "./google-button";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Sign in | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Sign in") };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

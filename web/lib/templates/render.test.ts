@@ -7,7 +7,7 @@ import { renderWedding } from "./render";
 import type { WeddingData } from "./types";
 
 const FIXTURES = path.join(__dirname, "__fixtures__");
-const origin = "https://dreamshagun.example";
+const origin = "https://gatherbell.example";
 
 function wedding(overrides: Partial<WeddingData> = {}): WeddingData {
   return {
@@ -117,7 +117,7 @@ describe("renderWedding", () => {
     const html = await render(wedding());
     expect(html).toContain('<meta property="og:title" content="Diya &amp; Aarav are getting married">');
     expect(html).toContain('<meta property="og:image" content="https://cdn.example/cover.jpg">');
-    expect(html).toContain('<meta property="og:url" content="https://dreamshagun.example/w/diya-and-aarav">');
+    expect(html).toContain('<meta property="og:url" content="https://gatherbell.example/w/diya-and-aarav">');
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
   });
 

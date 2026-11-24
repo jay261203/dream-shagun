@@ -1,4 +1,5 @@
 import type { WeddingData } from "./types";
+import { brand } from "@/lib/brand";
 
 const ZONE = "Asia/Kolkata";
 
@@ -81,6 +82,7 @@ export function prepare(data: WeddingData) {
   });
 
   return {
+    brand_name: brand.name,
     slug: data.slug,
     bride_name: data.bride_name,
     groom_name: data.groom_name,

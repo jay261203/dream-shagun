@@ -90,7 +90,7 @@ describe("POST /api/weddings", () => {
   });
 
   it("allows the same site when a proxy rewrites the host", async () => {
-    const res = await POST(post({}, { origin: "https://dreamshagun.example", host: "internal:3000", "x-forwarded-host": "dreamshagun.example" }));
+    const res = await POST(post({}, { origin: "https://gatherbell.example", host: "internal:3000", "x-forwarded-host": "gatherbell.example" }));
     expect(res.status).toBe(201);
   });
 });

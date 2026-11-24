@@ -6,8 +6,9 @@ import { SiteHeader } from "@/components/site-chrome";
 import { loadEditorWedding } from "@/lib/editor-context";
 
 import { StoryEditor } from "./story-editor";
+import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Couple and story | Dream Shagun" };
+export const metadata: Metadata = { title: pageTitle("Couple and story") };
 
 export default function StoryPage({ params }: { params: Promise<{ id: string }> }) {
   return (

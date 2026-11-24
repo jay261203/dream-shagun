@@ -43,7 +43,7 @@ describe("templates in the repo", async () => {
 
   it.each(ids)("%s loads, passes the safety checks and renders", async (id) => {
     const template = await loadTemplate(id);
-    const html = renderWedding(template, sample, { origin: "https://dreamshagun.example" });
+    const html = renderWedding(template, sample, { origin: "https://gatherbell.example" });
     expect(html).toContain("Diya");
     expect(html).toContain("Aarav");
     expect(html).toContain('data-section="cover"');
@@ -51,7 +51,7 @@ describe("templates in the repo", async () => {
 
   it.each(ids)("%s links its script with a content version so updates are never stale", async (id) => {
     const template = await loadTemplate(id);
-    const html = renderWedding(template, sample, { origin: "https://dreamshagun.example" });
+    const html = renderWedding(template, sample, { origin: "https://gatherbell.example" });
     if (template.hasEffects) expect(html).toContain(`/t/${id}/effects.js?v=${template.effectsVersion}"`);
     if (template.hasEffects) expect(template.effectsVersion).toMatch(/^[0-9a-f]{10}$/);
   });
@@ -83,7 +83,7 @@ describe("templates in the repo", async () => {
 describe("the music switch", () => {
   it("plays the template's tune by default and not at all when the family turns it off", async () => {
     const template = await loadTemplate("marigold");
-    const render = (extra: Partial<WeddingData>) => renderWedding(template, { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+    const render = (extra: Partial<WeddingData>) => renderWedding(template, { ...sample, ...extra }, { origin: "https://gatherbell.example" });
     expect(render({})).toContain("data-music-button");
     expect(render({ music_enabled: true })).toContain("data-music-button");
     const off = render({ music_enabled: false });
@@ -95,7 +95,7 @@ describe("the music switch", () => {
 
 describe("the reply form hook-up", () => {
   const render = async (extra: Partial<WeddingData>) =>
-    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://gatherbell.example" });
 
   it("hands the reply script the wedding's events and deadline, escaped, and loads the script once", async () => {
     const html = await render({ rsvp_deadline: "2027-01-31", events: [{ ...sample.events[0], id: "e1", name: 'Sangeet "night" <b>' }] });
@@ -119,7 +119,7 @@ describe("the reply form hook-up", () => {
 
 describe("the blessing form hook-up", () => {
   const render = async (extra: Partial<WeddingData>) =>
-    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://dreamshagun.example" });
+    renderWedding(await loadTemplate("marigold"), { ...sample, ...extra }, { origin: "https://gatherbell.example" });
 
   it("loads the blessing script once and hands it only the link name, the host names and the preview flag", async () => {
     const html = await render({ events: [{ ...sample.events[0], id: "e1" }] });

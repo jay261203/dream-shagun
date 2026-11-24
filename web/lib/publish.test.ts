@@ -20,7 +20,7 @@ describe("checklist", () => {
 
 describe("sharing", () => {
   it("builds the public address without doubling slashes or trusting odd characters", () => {
-    expect(inviteUrl("https://dreamshagun.example/", "meera-and-dev")).toBe("https://dreamshagun.example/w/meera-and-dev");
+    expect(inviteUrl("https://gatherbell.example/", "meera-and-dev")).toBe("https://gatherbell.example/w/meera-and-dev");
     expect(inviteUrl("http://localhost:3000", "a/b?x")).toBe("http://localhost:3000/w/a%2Fb%3Fx");
   });
   it("writes a short message with the names and the link only", () => {

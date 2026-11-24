@@ -77,6 +77,10 @@ export function prepare(data: WeddingData) {
   // What the guestbook form needs. `preview` is true when the page is a preview with no saved events, so it shows but cannot send.
   const guestbook_config = JSON.stringify({ slug: data.slug, preview: events.some((e) => !e.id) });
 
+  // The small "gift" link. A preview has no saved events and the gift page of an unpublished invitation does not exist, so there it points nowhere.
+  const preview = events.some((e) => !e.id);
+  const gift_url = (data.gift_mode ?? "link") === "link" ? (preview ? "#" : `/w/${encodeURIComponent(data.slug)}/gift`) : null;
+
   return {
     brand_name: brand.name,
     slug: data.slug,
@@ -92,6 +96,7 @@ export function prepare(data: WeddingData) {
     first_event_iso: firstEvent?.iso ?? null,
     rsvp_config,
     guestbook_config,
+    gift_url,
     events,
     moments,
     has_events: events.length > 0,

@@ -76,6 +76,8 @@ export type WeddingData = {
   sections_enabled: string[];
   languages: string[];
   blessings_enabled: boolean;
+  /** How the invitation treats gifts: no page, a small link, or a page reached only by its address. Missing counts as "link". */
+  gift_mode?: "off" | "link" | "private";
   rsvp_deadline: string | null;
   events: WeddingEvent[];
   moments: WeddingMoment[];

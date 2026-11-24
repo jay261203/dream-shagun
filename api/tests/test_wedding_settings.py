@@ -26,7 +26,7 @@ def db():
         ],
         weddings=[
             {"id": WEDDING_A, "bride_name": "Meera", "groom_name": "Dev", "wedding_date": "2028-02-12", "story": "Old story",
-             "color_preset": None, "font_pair": None, "music_enabled": True, "sections_enabled": ["cover", "couple", "events"],
+             "color_preset": None, "font_pair": None, "music_enabled": True, "gift_mode": "link", "sections_enabled": ["cover", "couple", "events"],
              "upi_id": "secret@upi"},
             {"id": WEDDING_B, "bride_name": "Other", "groom_name": "Couple", "wedding_date": None, "story": None,
              "color_preset": None, "font_pair": None, "music_enabled": True, "sections_enabled": ["cover"]},
@@ -71,7 +71,7 @@ class TestChanges:
     def test_the_answer_never_includes_money_details(self, client, db, owner):
         body = client.patch(url(), json={"story": "x"}, headers=owner).json()
         assert "upi_id" not in body
-        assert set(body) == {"id", "bride_name", "groom_name", "wedding_date", "story", "color_preset", "font_pair", "music_enabled", "sections_enabled"}
+        assert set(body) == {"id", "bride_name", "groom_name", "wedding_date", "story", "color_preset", "font_pair", "music_enabled", "gift_mode", "sections_enabled"}
 
     def test_names_dates_and_story(self, client, db, owner):
         res = client.patch(url(), json={"bride_name": "  Meera Shah ", "groom_name": "Dev", "wedding_date": "2028-03-04", "story": "  Hello  "}, headers=owner)
@@ -81,6 +81,11 @@ class TestChanges:
     def test_a_blank_story_or_null_date_clears_them(self, client, db, owner):
         client.patch(url(), json={"story": "   ", "wedding_date": None}, headers=owner)
         assert row(db)["story"] is None and row(db)["wedding_date"] is None
+
+    @pytest.mark.parametrize("mode", ["off", "link", "private"])
+    def test_the_gift_setting_can_be_changed(self, client, db, owner, mode):
+        assert client.patch(url(), json={"gift_mode": mode}, headers=owner).json()["gift_mode"] == mode
+        assert row(db)["gift_mode"] == mode
 
     def test_music_off_and_on(self, client, db, owner):
         client.patch(url(), json={"music_enabled": False}, headers=owner)
@@ -102,7 +107,7 @@ class TestChanges:
         [
             {"bride_name": ""}, {"bride_name": "   "}, {"groom_name": "x" * 81}, {"wedding_date": "1999-01-01"}, {"wedding_date": "2101-01-01"},
             {"story": "s" * 5001}, {"color_preset": "Not Valid!"}, {"color_preset": "../x"}, {"font_pair": ""},
-            {"sections_enabled": ["cover", "admin"]}, {"sections_enabled": "events"}, {"music_enabled": "maybe"},
+            {"sections_enabled": ["cover", "admin"]}, {"sections_enabled": "events"}, {"music_enabled": "maybe"}, {"gift_mode": "public"}, {"gift_mode": 3},
         ],
     )
     def test_bad_input_is_refused_and_nothing_changes(self, client, db, owner, body):

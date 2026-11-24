@@ -12,7 +12,7 @@ router = APIRouter(prefix="/weddings/{wedding_id}", tags=["wedding"])
 Db = Annotated[Client, Depends(get_supabase)]
 Family = Annotated[Member, Depends(require_member)]
 
-COLUMNS = "id, bride_name, groom_name, wedding_date, story, color_preset, font_pair, music_enabled, sections_enabled"
+COLUMNS = "id, bride_name, groom_name, wedding_date, story, color_preset, font_pair, music_enabled, gift_mode, sections_enabled"
 
 
 @router.patch("/details")

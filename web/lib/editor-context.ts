@@ -14,11 +14,12 @@ export type EditorWedding = {
   color_preset: string | null;
   font_pair: string | null;
   music_enabled: boolean;
+  gift_mode: "off" | "link" | "private";
   sections_enabled: string[];
   template_id: string | null;
 };
 
-const COLUMNS = "id, status, slug, bride_name, groom_name, wedding_date, story, color_preset, font_pair, music_enabled, sections_enabled, template_id";
+const COLUMNS = "id, status, slug, bride_name, groom_name, wedding_date, story, color_preset, font_pair, music_enabled, gift_mode, sections_enabled, template_id";
 
 /**
  * Who may edit this wedding, in one place for every editor page: not signed in goes to login, and anyone who is not in

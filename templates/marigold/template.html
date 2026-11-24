@@ -86,6 +86,10 @@
   </div>
 </section>
 
+{{#if gift_url}}
+<p class="giftlink"><a href="{{gift_url}}">Thinking of a gift?</a></p>
+{{/if}}
+
 <footer class="credits">
   <p>Made with {{brand_name}}.{{#unless cover_photo_url}} Photograph: Biswarup Ganguly, CC BY 3.0, via Wikimedia Commons.{{/unless}}{{#if music_is_default}} Music: L Ramakrishnan, CC0.{{/if}}</p>
 </footer>

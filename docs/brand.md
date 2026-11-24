@@ -79,7 +79,7 @@ occasion that does not use them. A wedding keeps every feature it has today.
 | Login | "There is no password to remember" | Filler |
 | Footer | "Shagun goes straight from guest to family. We never hold it." | Wedding and gift specific; belongs on the gifts screen only |
 | Create | "Create your wedding", Bride and Groom fields, "Choose your side" | Wedding-only form |
-| Editor | "Couple and story", "Wishes and UPI", "Replies" | "Couple", UPI-only |
+| Editor | "Couple and story", "Gifts and wishes", "Replies" | "Couple", UPI-only |
 | Guest form | "Will you come?" | Fine; keep |
 
 ## Check before shipping a screen

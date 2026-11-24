@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { WishesEditor } from "./wishes-editor";
 import { pageTitle } from "@/lib/brand";
 
-export const metadata: Metadata = { title: pageTitle("Wishes and UPI") };
+export const metadata: Metadata = { title: pageTitle("Gifts and wishes") };
 
 export default function WishesPage({ params }: { params: Promise<{ id: string }> }) {
   return (
@@ -41,7 +41,7 @@ async function Content({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <EditorShell weddingId={id} names={`${w.bride_name} and ${w.groom_name}`} status={w.status} active="wishes">
-      <WishesEditor weddingId={id} brideName={w.bride_name} groomName={w.groom_name} initial={initial} />
+      <WishesEditor weddingId={id} slug={w.slug} published={w.status === "published"} giftMode={w.gift_mode} brideName={w.bride_name} groomName={w.groom_name} initial={initial} />
     </EditorShell>
   );
 }

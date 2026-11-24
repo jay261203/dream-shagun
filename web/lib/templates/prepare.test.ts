@@ -32,3 +32,16 @@ describe("prepare: countdown and calendar", () => {
     expect(sample.has_calendar).toBe(false);
   });
 });
+
+describe("prepare: gift link", () => {
+  const withMode = (gift_mode?: "off" | "link" | "private", events: WeddingEvent[] = [ev("A", "2028-02-12T05:00:00.000Z", 1, "11111111-1111-1111-1111-111111111111")]) => prepare({ ...data(events), gift_mode });
+  it("is on by default and only for the link setting", () => {
+    expect(withMode(undefined).gift_url).toBe("/w/meera-and-dev/gift");
+    expect(withMode("link").gift_url).toBe("/w/meera-and-dev/gift");
+    expect(withMode("private").gift_url).toBeNull();
+    expect(withMode("off").gift_url).toBeNull();
+  });
+  it("points nowhere in a preview", () => {
+    expect(withMode("link", [ev("A", "2028-02-12T05:00:00.000Z", 1)]).gift_url).toBe("#");
+  });
+});

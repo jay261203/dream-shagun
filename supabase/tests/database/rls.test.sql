@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(36);
+select plan(40);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -161,6 +161,14 @@ select throws_ok(
 select throws_ok(
   format($$insert into public.guestbook (wedding_id, guest_name, message) values ('10000000-0000-0000-0000-00000000000a', 'x', %L)$$, repeat('m', 601)),
   '23514', null, 'a guestbook message cannot pass 600 letters');
+
+-- ---- gift setting: guests can read the setting (not the UPI IDs), only the three known values are accepted
+select is((select gift_mode from public.weddings where id = '10000000-0000-0000-0000-00000000000a'), 'link', 'a new invitation starts with the small gift link');
+set local role anon;
+select lives_ok('select gift_mode from public.weddings', 'a guest can read the gift setting');
+reset role;
+select lives_ok($$update public.weddings set gift_mode = 'private' where id = '10000000-0000-0000-0000-00000000000a'$$, 'gift setting accepts private');
+select throws_ok($$update public.weddings set gift_mode = 'public' where id = '10000000-0000-0000-0000-00000000000a'$$, '23514', null, 'gift setting refuses any other value');
 
 select * from finish();
 rollback;

@@ -21,6 +21,10 @@ def test_upi_link_encodes_and_formats_amount():
     )
 
 
+def test_upi_link_without_amount_or_note_leaves_both_out():
+    assert build_upi_link("ab@okaxis", "Meera Shah", None, None) == "upi://pay?pa=ab@okaxis&pn=Meera%20Shah&cu=INR"
+
+
 def test_upi_link_rejects_bad_input():
     assert not is_valid_upi_id("not-an-id")
     with pytest.raises(ValueError):

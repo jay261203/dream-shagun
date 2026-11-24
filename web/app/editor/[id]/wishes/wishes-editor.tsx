@@ -2,9 +2,18 @@
 
 import { useState } from "react";
 
+import { SaveStatus } from "@/components/save-status";
+import { useAutosave } from "@/lib/use-autosave";
 import { SIDE_LIMITS, SIDES, maskUpi, parseSideErrors, sidePayload, validateSide, type SideErrors, type SideForm, type SideKey } from "@/lib/sides";
 
-type Props = { weddingId: string; brideName: string; groomName: string; initial: Record<SideKey, SideForm> };
+type GiftMode = "off" | "link" | "private";
+type Props = { weddingId: string; slug: string; published: boolean; giftMode: GiftMode; brideName: string; groomName: string; initial: Record<SideKey, SideForm> };
+
+const GIFT_CHOICES: { key: GiftMode; label: string; hint: string }[] = [
+  { key: "link", label: "A small link on the invitation", hint: "A quiet \"Thinking of a gift?\" link under the messages." },
+  { key: "private", label: "A private link only", hint: "No link on the invitation. You send the address to the people you choose." },
+  { key: "off", label: "Not mentioned", hint: "No gift page at all." },
+];
 type Problems = SideErrors & { form?: string };
 
 const box = "flex flex-col rounded-xl border border-field bg-white px-3.5 py-2.5 focus-within:border-ink";
@@ -12,7 +21,7 @@ const labelClass = "text-[11px] font-bold uppercase tracking-wide";
 const inputClass = "bg-transparent pt-0.5 text-base outline-none";
 const errorClass = "text-sm font-semibold text-danger";
 
-function SideCard({ weddingId, side, title, initial }: { weddingId: string; side: SideKey; title: string; initial: SideForm }) {
+function SideCard({ weddingId, side, title, initial, onSaved }: { weddingId: string; side: SideKey; title: string; initial: SideForm; onSaved: (side: SideKey, form: SideForm) => void }) {
   const [form, setForm] = useState(initial);
   const [saved, setSaved] = useState(initial);
   const [problems, setProblems] = useState<Problems>({});
@@ -46,6 +55,7 @@ function SideCard({ weddingId, side, title, initial }: { weddingId: string; side
         return;
       }
       setSaved(form);
+      onSaved(side, form);
       setNote("Saved.");
     } catch {
       setProblems({ form: "We could not reach the server. Check your connection and try again." });
@@ -129,17 +139,55 @@ function SideCard({ weddingId, side, title, initial }: { weddingId: string; side
   );
 }
 
-/** A wish, a UPI ID and a payee name for each side. The two sides never mix, and guests never see the UPI ID. */
-export function WishesEditor({ weddingId, brideName, groomName, initial }: Props) {
+/** How gifts are treated: the choice saves at once. A private link shows its address to copy. */
+function GiftSetting({ weddingId, slug, published, initial, ready }: { weddingId: string; slug: string; published: boolean; initial: GiftMode; ready: boolean }) {
+  const [mode, setMode] = useState(initial);
+  const { save, state, savedAt, message } = useAutosave(weddingId, 150);
+  const [copied, setCopied] = useState(false);
+  const address = typeof window === "undefined" ? `/w/${slug}/gift` : `${window.location.origin}/w/${slug}/gift`;
+
+  return (
+    <fieldset className="flex flex-col gap-3 rounded-[20px] border border-line p-6">
+      <legend className="px-1 text-xl font-bold tracking-tight">Gift page</legend>
+      <p className="text-[15px] text-muted">Gifts are never asked for on the invitation. Guests only see this page if they choose to open it.</p>
+      {GIFT_CHOICES.map((c) => (
+        <label key={c.key} className="flex cursor-pointer items-start gap-3 rounded-xl border border-field p-3.5 has-[:checked]:border-ink">
+          <input type="radio" name="gift-mode" value={c.key} checked={mode === c.key} onChange={() => { setMode(c.key); save({ gift_mode: c.key }); }} className="mt-1 size-5 shrink-0 accent-accent" />
+          <span className="flex flex-col gap-0.5">
+            <span className="text-base font-bold">{c.label}</span>
+            <span className="text-[15px] text-muted">{c.hint}</span>
+          </span>
+        </label>
+      ))}
+      {mode !== "off" && !ready ? <p role="status" className="text-[15px] font-semibold text-danger">No side has a UPI ID and a name saved yet, so the gift page will be empty. Add them below.</p> : null}
+      {mode === "private" ? (
+        <div className="flex flex-col items-start gap-2 rounded-xl bg-surface p-4">
+          <p className="text-[15px]">{published ? "Send this address to the people you choose:" : "This address works once you publish:"}</p>
+          <code className="break-all text-[15px] font-semibold">{address}</code>
+          <button type="button" onClick={() => { void navigator.clipboard?.writeText(address).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }, () => undefined); }} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-ink px-5 text-base font-semibold hover:bg-white">
+            {copied ? "Copied" : "Copy address"}
+          </button>
+        </div>
+      ) : null}
+      <SaveStatus state={state} savedAt={savedAt} message={message} />
+    </fieldset>
+  );
+}
+
+/** The gift page setting, then a wish, a UPI ID and a payee name for each side. The two sides never mix, and the UPI ID only shows on the gift page. */
+export function WishesEditor({ weddingId, slug, published, giftMode, brideName, groomName, initial }: Props) {
   const titles: Record<SideKey, string> = { bride: `${brideName}'s side`, groom: `${groomName}'s side` };
+  const [saved, setSaved] = useState(initial);
+  const ready = SIDES.some((s) => saved[s].upi_id.trim() && saved[s].payee_name.trim());
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold tracking-tight">Wishes and UPI</h1>
-        <p className="text-base text-muted">Where gifts go, for the optional gift page that comes next. Nothing here shows on your invitation yet, and we never hold the money.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Gifts and wishes</h1>
+        <p className="text-base text-muted">Where gifts can be sent, if guests want to. The money goes straight to your UPI ID; we never hold it.</p>
       </div>
+      <GiftSetting weddingId={weddingId} slug={slug} published={published} initial={giftMode} ready={ready} />
       {SIDES.map((side) => (
-        <SideCard key={side} weddingId={weddingId} side={side} title={titles[side]} initial={initial[side]} />
+        <SideCard key={side} weddingId={weddingId} side={side} title={titles[side]} initial={initial[side]} onSaved={(s, f) => setSaved((prev) => ({ ...prev, [s]: f }))} />
       ))}
     </div>
   );

@@ -20,13 +20,13 @@ export type RenderOptions = {
 };
 
 /** Point the template's own files (assets/...) at the route that serves them. */
-function rewriteAssets(id: string, text: string): string {
+export function rewriteAssets(id: string, text: string): string {
   return text
     .replace(/\b(src|href|poster)=(["'])assets\//g, `$1=$2/t/${id}/assets/`)
     .replace(/url\((["']?)assets\//g, `url($1/t/${id}/assets/`);
 }
 
-function cssVars(vars: Record<string, string>): string {
+export function cssVars(vars: Record<string, string>): string {
   return Object.entries(vars)
     .map(([k, v]) => `${k}:${v};`)
     .join("");
@@ -46,6 +46,19 @@ function shareTags(title: string, description: string, url: string, image: strin
   ];
   // Open Graph tags use property=, Twitter tags use name=.
   return tags.map(([k, v]) => `<meta ${k.startsWith("twitter:") ? "name" : "property"}="${k}" content="${esc(v)}">`).join("\n");
+}
+
+/** The chosen colours and fonts of one invitation, and the tags that load its fonts. Shared by the invitation and the gift page. */
+export function themeParts(template: LoadedTemplate, data: Pick<WeddingData, "color_preset" | "font_pair">) {
+  const { manifest } = template;
+  const preset = manifest.colorPresets[data.color_preset ?? ""] ?? manifest.colorPresets[manifest.defaults.colorPreset];
+  const pair = manifest.fontPairs[data.font_pair ?? ""] ?? manifest.fontPairs[manifest.defaults.fontPair];
+  // Family names were checked against a strict pattern when the manifest loaded, so only spaces need changing.
+  const fontQuery = (pair.googleFonts ?? []).map((f) => `family=${f.replace(/ /g, "+")}`).join("&amp;");
+  const fontLinks = fontQuery
+    ? `<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${fontQuery}&amp;display=swap">`
+    : "";
+  return { preset, pair, fontLinks };
 }
 
 /** Fill a template with one wedding's data and return a finished HTML page. */
@@ -73,13 +86,7 @@ export function renderWedding(template: LoadedTemplate, data: WeddingData, optio
   const body = rewriteAssets(manifest.id, root.toString());
 
   // 3. Theme: colour preset and font pair become CSS variables.
-  const preset = manifest.colorPresets[data.color_preset ?? ""] ?? manifest.colorPresets[manifest.defaults.colorPreset];
-  const pair = manifest.fontPairs[data.font_pair ?? ""] ?? manifest.fontPairs[manifest.defaults.fontPair];
-  // Family names were checked against a strict pattern when the manifest loaded, so only spaces need changing.
-  const fontQuery = (pair.googleFonts ?? []).map((f) => `family=${f.replace(/ /g, "+")}`).join("&amp;");
-  const fontLinks = fontQuery
-    ? `<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${fontQuery}&amp;display=swap">`
-    : "";
+  const { preset, pair, fontLinks } = themeParts(template, data);
 
   // 4. Share tags for the WhatsApp preview.
   const title = `${view.title} are getting married`;

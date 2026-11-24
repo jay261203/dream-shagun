@@ -19,6 +19,7 @@ const WEDDING_COLUMNS = [
   "sections_enabled",
   "languages",
   "blessings_enabled",
+  "gift_mode",
   "rsvp_deadline",
 ].join(",");
 

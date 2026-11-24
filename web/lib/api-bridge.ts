@@ -1,8 +1,6 @@
+import { apiBase } from "@/lib/api-url";
 import { createClient } from "@/lib/supabase/server";
 
-function apiBase(): string {
-  return (process.env.API_URL_INTERNAL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
-}
 
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });

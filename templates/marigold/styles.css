@@ -251,3 +251,28 @@ a { color: var(--color-primary); }
   .petal { display: none; }
   .js-reveal [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* The small gift link under the messages, and the gift page (drawn by the server, with two small helpers in a script). */
+.giftlink { padding: 0 24px 36px; text-align: center; font-size: 15px; }
+.giftlink a { text-underline-offset: 4px; }
+.giftpage { min-height: 100vh; min-height: 100svh; }
+.gift__back { margin-bottom: 28px; font-size: 15px; }
+.gift__title { font-size: 44px; }
+.gift__intro { margin: 10px 0 28px; max-width: 38ch; }
+.gift__card { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; padding: 28px 22px; text-align: center; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 28px; box-shadow: 0 18px 40px -30px color-mix(in srgb, var(--color-ink) 50%, transparent); }
+.gift__card h2 { margin: 0; font-size: 28px; }
+.gift__wish { max-width: 32ch; }
+.gift__qr { width: 200px; height: 200px; border-radius: 16px; background: #fff; border: 1px solid var(--color-line); }
+.gift__who { max-width: 32ch; font-size: 15px; }
+.gift__open { width: 100%; min-height: 56px; background: var(--color-primary); color: #fff; box-shadow: 0 14px 24px -16px var(--color-primary); }
+.gift__open:hover { background: var(--color-primary-dark); }
+.gift__id { font-size: 15px; overflow-wrap: anywhere; }
+.gift__id code { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.gift__copy { min-height: 48px; padding: 0 18px; border: 1.5px solid var(--color-ink); border-radius: 12px; background: transparent; color: var(--color-ink); font: 700 16px var(--font-body); cursor: pointer; }
+.gift__copy:hover { background: var(--color-ink); color: var(--color-bg); }
+.gift__copy[hidden] { display: none; }
+.gift__note { margin-top: 36px; }
+.gift__note h2 { font-size: 26px; margin-bottom: 6px; }
+.gift__empty { padding: 28px 0; }
+.gbook select { min-height: 52px; padding: 0 14px; border: 1.5px solid var(--color-line); border-radius: 14px; background: #fff; color: var(--color-ink); font: 17px var(--font-body); }
+@media (prefers-reduced-motion: reduce) { .gift__copy, .gift__open { transition: none !important; } }

@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -19,6 +20,7 @@ class WeddingChanges(BaseModel):
     color_preset: str | None = Field(default=None, min_length=1, max_length=40, pattern=_CODE)
     font_pair: str | None = Field(default=None, min_length=1, max_length=40, pattern=_CODE)
     music_enabled: bool | None = None
+    gift_mode: Literal["off", "link", "private"] | None = None
     sections_enabled: list[str] | None = Field(default=None, max_length=len(KNOWN_SECTIONS))
 
     @field_validator("bride_name", "groom_name")

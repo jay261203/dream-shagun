@@ -34,8 +34,8 @@ class RateLimiter:
 # Ten replies or changes in ten minutes from one address to one wedding is far more than a family needs.
 rsvp_limiter = RateLimiter(limit=10, window_seconds=600)
 
-# Five blessings from one address to one wedding in ten minutes is plenty for a family of guests on one connection.
-blessing_limiter = RateLimiter(limit=5, window_seconds=600)
+# Five gift notes from one address to one wedding in ten minutes is plenty for a family of guests on one connection.
+gift_limiter = RateLimiter(limit=5, window_seconds=600)
 
 # Five messages from one address to one invitation in ten minutes.
 guestbook_limiter = RateLimiter(limit=5, window_seconds=600)

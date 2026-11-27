@@ -36,7 +36,7 @@ export function EditorShell({ weddingId, names, status, active, children }: Prop
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-10">
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/dashboard" className="inline-flex min-h-11 items-center text-[15px] font-semibold text-muted hover:text-ink">
-              ← Your weddings
+              ← Your invitations
             </Link>
             <span className="text-base font-bold">{names}</span>
             <span className={`inline-flex min-h-7 items-center rounded-full border px-3 text-[13px] font-bold ${status === "published" ? "border-[#b6dfc0] bg-[#e7f4ea] text-[#1b4a2a]" : "border-line bg-surface"}`}>

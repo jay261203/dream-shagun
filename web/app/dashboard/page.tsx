@@ -8,7 +8,7 @@ import { createClient, currentClaims } from "@/lib/supabase/server";
 import { pageTitle } from "@/lib/brand";
 import { brand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: pageTitle("Your weddings") };
+export const metadata: Metadata = { title: pageTitle("Your invitations") };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -59,7 +59,7 @@ async function Weddings({ searchParams }: { searchParams: SearchParams }) {
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h1 className="text-4xl font-bold tracking-tight">Your weddings</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Your invitations</h1>
           {typeof claims.email === "string" ? <p className="text-[15px] text-muted">Signed in as {claims.email}</p> : null}
         </div>
         <form action="/auth/signout" method="post">

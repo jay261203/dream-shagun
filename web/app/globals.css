@@ -1,16 +1,22 @@
 @import "tailwindcss";
 
-/* Product colours. The coral accent is for the one main action on a screen. */
+/* Product colours and type (DS-35, the owner's chosen direction D, 28 Nov 2026): warm linen paper, near-black blue ink,
+   one harbour-blue accent for the one main action on a screen, Chivo for everything. Invitation templates keep their
+   own colours and fonts. */
 @theme inline {
-  --color-accent: #d93252;
-  --color-accent-dark: #b01e3e;
-  --color-ink: #222222;
-  --color-muted: #6a6a6a;
-  --color-line: #dddddd;
-  --color-field: #b0b0b0;
-  --color-surface: #f7f7f7;
-  --color-danger: #c13515;
-  --font-sans: var(--font-figtree), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-paper: #f3f1ec;
+  --color-surface: #e6e2d9;
+  --color-ink: #1d2530;
+  --color-muted: #5a6270;
+  --color-line: #d4d0c8;
+  --color-field: #9aa0a8;
+  --color-accent: #2c5877;
+  --color-accent-dark: #1f4560;
+  --color-night: #1d2530;
+  --color-night-ink: #f3f1ec;
+  --color-night-muted: #a9aeb5;
+  --color-danger: #b3261e;
+  --font-sans: var(--font-chivo), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 html {
@@ -24,6 +30,14 @@ body {
 :focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/* The home page's row of event names: it moves slowly sideways, pauses on hover or with its button, and wraps into a
+   still row under reduced motion. */
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-50% - 32px));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

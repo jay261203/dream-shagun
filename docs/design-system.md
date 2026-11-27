@@ -22,8 +22,9 @@ not UI chrome.
 - **Phone first.** Every screen is designed at 390 px wide, then widened. 48 px tap targets. The editor's phone preview
   stays beside the form on wide screens.
 
-Not decided here (needs your eyes): the exact fonts and accent. The plan is to build three directions of the home page
-as screenshots and choose.
+Decided 28 Nov 2026 (DS-35): the owner chose direction D, a mix of concepts B and C (`docs/home-concepts/`). Product
+tokens: linen paper #F3F1EC, surface #E6E2D9, ink #1D2530, muted #5A6270, one harbour-blue accent #2C5877, a dark
+ground #1D2530 for the close; Chivo for everything. Set in `web/app/globals.css`; templates keep their own colours.
 
 ## Token layers
 

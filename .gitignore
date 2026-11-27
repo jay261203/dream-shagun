@@ -23,3 +23,7 @@ __pycache__/
 .idea/
 # private notes (not pushed)
 CODE_GUIDE.local.md
+
+# DS-35 home page concepts: the built pages and the design kit stay local; screenshots go in docs/home-concepts
+design/home-concepts/
+.taste-skill/

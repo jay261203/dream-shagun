@@ -118,5 +118,12 @@ class TestLimits:
     def test_an_invitation_cannot_collect_endless_notes(self, client, db):
         from app.models.gift import MAX_GIFT_NOTES_PER_WEDDING
 
-        db.tables["blessings"] = [{"id": f"n{i}", "wedding_id": A} for i in range(MAX_GIFT_NOTES_PER_WEDDING)]
+        db.tables["blessings"] = [{"id": f"n{i}", "wedding_id": A, "source": "guest"} for i in range(MAX_GIFT_NOTES_PER_WEDDING)]
         assert client.post(NOTE, json=good()).status_code == 429
+
+    def test_gifts_the_hosts_recorded_do_not_use_up_the_guests_room(self, client, db):
+        from app.models.gift import MAX_GIFT_NOTES_PER_WEDDING
+
+        db.tables["blessings"] = [{"id": f"h{i}", "wedding_id": A, "source": "host"} for i in range(MAX_GIFT_NOTES_PER_WEDDING)]
+        assert client.post(NOTE, json=good()).status_code == 201
+        assert db.tables["blessings"][-1]["source"] == "guest"

@@ -1,6 +1,6 @@
 -- P1-01 (DS-10): proves who can read what. Run with `npx supabase test db`.
 begin;
-select plan(40);
+select plan(46);
 
 -- Every check below looks only at its own fixture rows (by id), so seed data or rows made by hand in a dev
 -- database cannot change the result.
@@ -169,6 +169,27 @@ select lives_ok('select gift_mode from public.weddings', 'a guest can read the g
 reset role;
 select lives_ok($$update public.weddings set gift_mode = 'private' where id = '10000000-0000-0000-0000-00000000000a'$$, 'gift setting accepts private');
 select throws_ok($$update public.weddings set gift_mode = 'public' where id = '10000000-0000-0000-0000-00000000000a'$$, '23514', null, 'gift setting refuses any other value');
+
+-- ---- gift register (DS-25): who wrote a row, what a physical gift was, and who may change rows
+select is((select source from public.blessings where giver_name = 'Mehta family' and wedding_id = '10000000-0000-0000-0000-00000000000a'), 'guest',
+  'a row with no source is a guest note');
+select throws_ok(
+  $$insert into public.blessings (wedding_id, giver_name, method, side, source) values ('10000000-0000-0000-0000-00000000000a', 'x', 'gift', 'bride', 'family')$$,
+  '23514', null, 'a gift row is written by a guest or a host, nothing else');
+select throws_ok(
+  format($$insert into public.blessings (wedding_id, giver_name, method, side, source, description) values ('10000000-0000-0000-0000-00000000000a', 'x', 'gift', 'bride', 'host', %L)$$, repeat('d', 201)),
+  '23514', null, 'a gift description cannot pass 200 letters');
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000000a1","role":"authenticated"}', true);
+select throws_ok(
+  $$update public.blessings set status = 'rejected' where wedding_id = '10000000-0000-0000-0000-00000000000a'$$,
+  '42501', null, 'a host cannot change a gift straight in the database (API only)');
+select throws_ok(
+  $$delete from public.blessings where wedding_id = '10000000-0000-0000-0000-00000000000a'$$,
+  '42501', null, 'a host cannot delete a gift straight from the database (API only)');
+select is((select count(*)::int from public.blessings where wedding_id = '10000000-0000-0000-0000-00000000000a' and source = 'guest'), 1,
+  'a host reads the new columns of their own register');
+reset role;
 
 select * from finish();
 rollback;

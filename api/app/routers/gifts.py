@@ -70,7 +70,9 @@ def leave_gift_note(slug: str, body: GiftNoteIn, request: Request, db: Db, limit
     visitor = forwarded or (request.client.host if request.client else "unknown")
     if not limiter.allow(f"{visitor}|{slug}"):
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "That is a lot of notes. Please wait a few minutes and try again.")
-    if len(db.table("blessings").select("id").eq("wedding_id", wedding["id"]).execute().data) >= MAX_GIFT_NOTES_PER_WEDDING:
+    # Only guest notes count toward this cap, so gifts the hosts record by hand never stop guests from writing.
+    notes = db.table("blessings").select("id").eq("wedding_id", wedding["id"]).eq("source", "guest").execute().data
+    if len(notes) >= MAX_GIFT_NOTES_PER_WEDDING:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "This invitation has reached its limit. Please contact the family.")
 
     db.table("blessings").insert(
@@ -82,6 +84,7 @@ def leave_gift_note(slug: str, body: GiftNoteIn, request: Request, db: Db, limit
             "method": "upi",
             "status": "claimed",
             "side": body.side,
+            "source": "guest",
         }
     ).execute()
     return {"ok": True}

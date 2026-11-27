@@ -12,6 +12,7 @@ const SECTIONS = [
   { key: "sections", label: "Sections", href: "sections" },
   { key: "look", label: "Look and music", href: "look" },
   { key: "wishes", label: "Gifts and wishes", href: "wishes" },
+  { key: "gifts", label: "Gift register", href: "gifts" },
   { key: "replies", label: "Replies", href: "replies" },
   { key: "messages", label: "Messages", href: "messages" },
   { key: "publish", label: "Publish", href: "publish" },

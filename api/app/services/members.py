@@ -17,6 +17,7 @@ class Member:
     user_id: str
     role: str  # "owner" or "helper"
     side: str  # "bride" or "groom"
+    member_id: str | None = None  # the family_members row, recorded when this person marks a gift received
 
 
 def require_member(
@@ -31,7 +32,7 @@ def require_member(
     """
     rows = (
         db.table("family_members")
-        .select("role, side")
+        .select("id, role, side")
         .eq("wedding_id", str(wedding_id))
         .eq("user_id", user.id)
         .execute()
@@ -39,4 +40,4 @@ def require_member(
     )
     if not rows:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Wedding not found")
-    return Member(wedding_id=str(wedding_id), user_id=user.id, role=rows[0]["role"], side=rows[0]["side"])
+    return Member(wedding_id=str(wedding_id), user_id=user.id, role=rows[0]["role"], side=rows[0]["side"], member_id=rows[0].get("id"))

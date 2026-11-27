@@ -1,5 +1,11 @@
 # Home page directions (DS-35), 28 Nov 2026
 
+**Chosen (28 Nov 2026): D, a mix of B and C.** From C: the invitation collage hero, the replies window beside the live
+invitation, the steps with the moving row of event names, the dark footer. From B: linen and harbour blue, Chivo, the
+ring mark and the "Replies per event" statement. Gate PASS (one waiver: the statement paragraph read as a heading).
+Screenshots `concept-d-1440.png` and `concept-d-390.png`. To fix in the build: the Rose events picture shows twice
+(hero and statement).
+
 Three directions for the new home page, for the owner to pick one. Each shows the real product: Meera and Dev's
 demo invitation as the app renders it (Marigold, Rose and Forest presets), real screenshots of the editor, the reply
 form, the Replies screen and the gift page, and real reply counts from the local demo (13 guests). Same words in all
